@@ -7,25 +7,20 @@ package frc.robot.commands.groups;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotState;
-import frc.robot.commands.DeployElevator;
-import frc.robot.commands.HoldClaw;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class StopIntake extends ParallelCommandGroup {
     /** Creates a new StopIntake. */
-    public StopIntake(Elevator elevator, Arm arm, Claw claw, RobotState robotState) {
+    public StopIntake(Arm arm, Claw claw, RobotState robotState) {
         // Add your commands in the addCommands() call, e.g.
         // addCommands(new FooCommand(), new BarCommand());
         addCommands(
-                // new HoldClaw(claw),
-                new DeployElevator(elevator, arm, robotState, ElevatorState.Undeployed),
-            new SafeDumbTowerToPosition(elevator, arm, robotState, Constants.TowerConstants.normal)
+            new SetArmPosition(arm, Constants.TowerConstants.normal.angle())
         );
     }
 }

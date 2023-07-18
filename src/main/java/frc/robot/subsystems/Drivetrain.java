@@ -41,7 +41,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
+// import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -106,13 +106,13 @@ public class Drivetrain extends SubsystemBase {
     // private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
     // private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
     // private DoubleArrayLogEntry ll13BotposeFieldSpaceLog;
-    private DoubleArrayLogEntry llBackBotposeBlueLog;
+    // private DoubleArrayLogEntry llBackBotposeBlueLog;
     private DoubleArrayLogEntry llRightBotposeBlueLog;
     private DoubleArrayLogEntry llLeftBotposeBlueLog;
-    private DoubleArrayLogEntry llBackBotposeRedLog;
+    // private DoubleArrayLogEntry llBackBotposeRedLog;
     private DoubleArrayLogEntry llRightBotposeRedLog;
     private DoubleArrayLogEntry llLeftBotposeRedLog;
-    private IntegerLogEntry llBackTargetIDLog;
+    // private IntegerLogEntry llBackTargetIDLog;
     private IntegerLogEntry llRightTargetIDLog;
     private IntegerLogEntry llLeftTargetIDLog;
     // private double[] limelightBackBotPose;
@@ -302,15 +302,15 @@ public class Drivetrain extends SubsystemBase {
             // ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
             // "/ll/twelve/botpose_field");
 
-            llBackBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
+            // llBackBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
             llRightBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_blue");
             llLeftBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/thirteen/botpose_blue");
 
-            llBackBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
+            // llBackBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
             llRightBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_red");
             llLeftBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/thirteen/botpose_red");
 
-            llBackTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
+            // llBackTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
             llRightTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
             llLeftTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/thirteen/target_id");
 

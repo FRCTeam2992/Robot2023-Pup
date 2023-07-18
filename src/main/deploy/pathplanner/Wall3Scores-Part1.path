@@ -177,8 +177,7 @@
     {
       "position": 0.1,
       "names": [
-        "SetIntakeModeCube",
-        "TowerMoveUnsafeRearSafePoint"
+        "SetIntakeModeCube"
       ]
     },
     {

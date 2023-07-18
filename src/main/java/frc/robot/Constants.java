@@ -8,7 +8,6 @@ import frc.lib.leds.Color;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.lib.manipulator.Waypoint;
 import frc.lib.manipulator.Waypoint.OuttakeType;
-import frc.robot.subsystems.Elevator.ElevatorState;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -181,82 +180,19 @@ public final class Constants {
     }
 
     public static class TowerConstants {
-        public static Waypoint scoreFloor = new Waypoint(0.0, 80.00,
-                OuttakeType.Hybrid, ElevatorState.Undeployed, 0.0);
+        public static Waypoint scoreFloor = new Waypoint(80.00, OuttakeType.Hybrid);
+        public static Waypoint scoreCubeMid = new Waypoint(45.1, OuttakeType.Mid_Cube);
+        public static Waypoint normal = new Waypoint(20, OuttakeType.Unknown);
 
-        public static Waypoint scoreConeMid = new Waypoint(8.515, 10.0,
-                OuttakeType.Mid_Cone, ElevatorState.Deployed, 1.0);
-        public static Waypoint scoreConeHigh = new Waypoint(31.75, 26.4,
-                OuttakeType.Hi_Cone, ElevatorState.Deployed, 1.0);
+        public static Waypoint cubeGroundIntake = new Waypoint(129.00, OuttakeType.Unknown);
+        public static Waypoint cubeWall3GroundIntake = new Waypoint(125.00, OuttakeType.Unknown);
 
-        public static Waypoint scoreCubeMid = new Waypoint(8.0, 45.1,
-                OuttakeType.Mid_Cube, ElevatorState.Undeployed, 0.0);
-        public static Waypoint scoreCubeHigh = new Waypoint(22.802, 9.54,
-                OuttakeType.Hi_Cube, ElevatorState.Deployed, 0.75);
+        public static Waypoint midThrowCube = new Waypoint(35.0, OuttakeType.Mid_Cube);
+        public static Waypoint rearLowThrowCube = new Waypoint(-79.0, OuttakeType.Rear_Low_Cube);
+        public static Waypoint rearMidThrowCube = new Waypoint(-79.0, OuttakeType.Mid_Cube);
+        public static Waypoint rearSafePoint = new Waypoint(-72, OuttakeType.Assumed_Cube);
 
-        public static Waypoint normal = new Waypoint(0, 20,
-                OuttakeType.Unknown, ElevatorState.Undeployed, 0.0);
-
-        public static Waypoint cubeGroundIntake = new Waypoint(0.7, 129.00,
-                OuttakeType.Unknown, ElevatorState.Undeployed, 0.0);
-        public static Waypoint cubeWall3GroundIntake = new Waypoint(0.7, 125.00,
-                OuttakeType.Unknown, ElevatorState.Undeployed, 0.0);
-
-        public static Waypoint midThrowCube = new Waypoint(15.0, 35.0,
-                OuttakeType.Mid_Cube, ElevatorState.Undeployed, 0.0);
-        public static Waypoint rearHighThrowCube = new Waypoint(30.0, -79.0,
-                OuttakeType.Rev_Mid_Throw_Cube, ElevatorState.Undeployed, 0.0);
-        public static Waypoint rearMidThrowCube = new Waypoint(16.0, -79.0,
-                OuttakeType.Mid_Cube, ElevatorState.Undeployed, 0.0);
-        public static Waypoint rearLowThrowCube = new Waypoint(0.2, -79.0,
-                OuttakeType.Rear_Low_Cube, ElevatorState.Undeployed, 0.0);
-        public static Waypoint rearSafePoint = new Waypoint(6.0, -72,
-                OuttakeType.Assumed_Cube, ElevatorState.Undeployed, 0.0);
-
-        public static Waypoint singleLoadStation = new Waypoint(0, -69.00,
-                OuttakeType.Unknown, ElevatorState.Undeployed, 0.0);
-        public static Waypoint doubleLoadStationCube = new Waypoint(20.62, 79.19,
-                OuttakeType.Unknown, ElevatorState.Undeployed, 0.0);
-        public static Waypoint doubleLoadStationCone = new Waypoint(24.42, 15.96,
-                OuttakeType.Unknown, ElevatorState.Deployed, 0.75);
-
-    }
-
-    public static class ElevatorConstants {
-        public static class DeviceIDs {
-            public static int elevatorMotorLead = 25;
-            public static int elevatorMotorFollow = 26;
-
-            public static int elevatorSolenoid = 0;
-        }
-
-        public static class PIDConstants {
-            public static double P = 0.5;
-            public static double I = 0;
-            public static double D = 0.5;
-            public static double FF = 0.15;
-            public static double cruiseVelocity = 70000;
-            // public static double cruiseVelocity = 1000;
-            public static double acceleration = 50000;
-            // public static double acceleration = 2000;
-        }
-
-        public static class Limits {
-            public static double hardStopTop = 32.25;
-            public static double hardStopBottom = 0.0;
-            public static double softStopTop = 31.75;
-            public static double softStopBottom = 0.5;
-        }
-
-        public static int encoderClicksPerRevolution = 2048; // clicks per revolution
-        public static double gearRatio = 6.0; // 6:1 ratio
-        public static double sprocketPitchDiameter = 1.751; // inches
-        public static double elevatorHeightToleranceInch = 0.75; // Moves within .5 inch are "close enough
-
-        public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
-                / (sprocketPitchDiameter * Math.PI);
-
-        public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
+        public static Waypoint singleLoadStation = new Waypoint(-69.00, OuttakeType.Unknown);
     }
 
     public static class ArmConstants {
@@ -324,20 +260,5 @@ public final class Constants {
         public static double holdPositionMaxTime = 150; // Seconds -- How long to prevent backdrive
         public static double holdPositionPower = 0.075;
 
-    }
-
-    public static class ButterflyWheelsConstants {
-        public static class DeviceIDs {
-            public static int butterflyWheelsSolenoid = 2;
-
-            public static int butterflyBeamBreakFront = 0;
-            public static int butterflyBeamBreakBack = 1;
-        }
-    }
-
-    public static class RobotConstants {
-        public static class DeviceIDs {
-            public static int networkToggleSwitch = 3;
-        }
     }
 }

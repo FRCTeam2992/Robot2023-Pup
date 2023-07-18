@@ -6,21 +6,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.manipulator.Waypoint;
 import frc.robot.RobotState;
-import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Elevator;
 
 public class MoveTowerToScoringPosition extends CommandBase {
-    private Elevator mElevator;
     private Arm mArm;
     private RobotState mRobotState;
 
     /** Creates a new MoveTowerToScoringPosition. */
-    public MoveTowerToScoringPosition(Elevator elevator, Arm arm, RobotState robotState) {
-        mElevator = elevator;
+    public MoveTowerToScoringPosition(Arm arm, RobotState robotState) {
         mArm = arm;
         mRobotState = robotState;
         // Use addRequirements() here to declare subsystem dependencies.
@@ -32,12 +27,8 @@ public class MoveTowerToScoringPosition extends CommandBase {
         Waypoint waypoint = mRobotState.currentTargetPosition.towerWaypoint;
         mRobotState.currentOuttakeType = waypoint.outtakeType();
 
-        CommandScheduler.getInstance().schedule(new DeployElevator(mElevator, mArm,
-                mRobotState, waypoint.elevatorState())
-                .alongWith(new WaitCommand(waypoint.delay())
-                        .andThen(new SafeDumbTowerToPosition(
-                                mElevator, mArm, mRobotState, waypoint))));
-
+        CommandScheduler.getInstance().schedule(
+                new SetArmPosition(mArm, waypoint.angle()));
     }
 
     // Called every time the scheduler runs while the command is scheduled.
