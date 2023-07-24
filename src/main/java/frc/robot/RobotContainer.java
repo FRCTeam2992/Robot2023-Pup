@@ -36,6 +36,7 @@ import frc.robot.testing.commands.TestArmPID;
 import frc.robot.testing.commands.TestClawIntake;
 import frc.robot.testing.commands.TestClawOuttake;
 import frc.robot.testing.commands.TestArmMove;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
@@ -69,6 +70,9 @@ public class RobotContainer {
     public final LEDs mLEDs;
 
     public final PowerDistribution pdh;
+
+    public DigitalInput networkToggleSwitch = new DigitalInput(
+        Constants.RobotConstants.DeviceIDs.networkToggleSwitch);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

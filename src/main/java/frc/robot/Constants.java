@@ -261,4 +261,10 @@ public final class Constants {
         public static double holdPositionPower = 0.075;
 
     }
+
+    public static class RobotConstants {
+        public static class DeviceIDs {
+            public static int networkToggleSwitch = 3;
+        }
+    }
 }
