@@ -19,11 +19,11 @@ public class TestArmMove extends CommandBase {
     mArm = arm;
     addRequirements(arm);
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double angle = SmartDashboard.getNumber("ArmTestMoveAngle", 100);
+    double angle = SmartDashboard.getNumber("ArmTestMoveAngle", 60);
+    System.out.println(">>>>>>>>>>>>>>>>> Moving arm from " + mArm.getArmCANCoderPositionCorrected() + " to " + angle);
     CommandScheduler.getInstance().schedule(new SetArmPosition(mArm, angle));
   }
 

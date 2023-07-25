@@ -267,7 +267,7 @@ public class RobotContainer {
             // new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
             SmartDashboard.putNumber("ArmTestMoveAngle", 0.0);
-            SmartDashboard.putData("TestSafeDumbPath", new TestArmMove(mArm));
+            SmartDashboard.putData("Test Move Arm", new TestArmMove(mArm));
             SmartDashboard.putData("Test PID Move Arm", new TestArmPID(mArm));
 
             // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
