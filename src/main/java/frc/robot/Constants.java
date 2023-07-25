@@ -56,10 +56,10 @@ public final class Constants {
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = -174.3;
-        public static final double frontRightOffset = 95.0; //90.8
-        public static final double rearLeftOffset = 180.6;//170.6
-        public static final double rearRightOffset = 28.3;//31.0
+        public static final double frontLeftOffset = -90.4; //-174.3
+        public static final double frontRightOffset = 101.5; //95.0 //90.8
+        public static final double rearLeftOffset = -145.1; //180.6 //170.6
+        public static final double rearRightOffset = 147.0; //28.3 //31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
@@ -209,17 +209,16 @@ public final class Constants {
         }
 
         public static class Limits {
-            public static double hardStopTop = 135.8;
-            public static double hardStopBottom = -87.0;
-            public static double softStopTop = 120.0;
-            public static double softStopBottom = -65.0;
+            public static double hardStopTop = 115.2;
+            public static double hardStopBottom = -85.5;
+            public static double softStopTop = 105.0;
+            public static double softStopBottom = -75.0;
         }
 
         public static double gearRatio = 64.0 * (32.0 / 12.0);
         public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
         public static double armAngleToleranceDeg = 0.5; // Moves within 1 degree are "close enough"
-        public static double CANCoderOffset = -131.0 + 7.5; // 7.5 degree offset due to misalignment when code was
-                                                      // written
+        public static double CANCoderOffset = 145.6;
 
         public static class ArmSlopConstants {
             public static double topZoneLowEdge = 12.0; // Above this may be n the slop zone
