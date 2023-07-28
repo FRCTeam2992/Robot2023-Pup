@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.leds.Color;
+import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
     /** Creates a new LEDs. */
@@ -20,7 +21,7 @@ public class LEDs extends SubsystemBase {
         // Reuse buffer
         // Default to a length of 60, start empty output
         // Length is expensive to set, so only set it once, then just update data
-        m_ledBuffer = new AddressableLEDBuffer(17);
+        m_ledBuffer = new AddressableLEDBuffer(256);
         m_led.setLength(m_ledBuffer.getLength());
 
         // Set the data
@@ -54,6 +55,74 @@ public class LEDs extends SubsystemBase {
                 cjColorChaseFrame3(color2, color1);
                 break;
             default:
+        }
+    }
+
+    public void displayCube() {
+        int[] cubePixels = {
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0,
+                0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0,
+                0, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2, 1, 3, 2, 0,
+                0, 2, 3, 2, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 2, 0,
+                0, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 0,
+                0, 0, 5, 5, 4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 0, 0,
+                0, 0, 0, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        Color[] cubeColors = {
+                Constants.LEDColors.off,
+                Constants.LEDColors.purple1,
+                Constants.LEDColors.purple2,
+                Constants.LEDColors.purple3,
+                Constants.LEDColors.purple4,
+                Constants.LEDColors.purple5
+        };
+
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            setSingleLEDColor(i, cubeColors[cubePixels[i]]);
+        }
+    }
+
+    public void displayCone() {
+        int[] conePixels = {
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0,
+                0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0,
+                0, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2, 1, 3, 2, 0,
+                0, 2, 3, 2, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 2, 0,
+                0, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 5, 0,
+                0, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 2, 0,
+                0, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 0,
+                0, 0, 5, 5, 4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 0, 0,
+                0, 0, 0, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        Color[] coneColors = {
+                Constants.LEDColors.off,
+                Constants.LEDColors.yellow1,
+                Constants.LEDColors.yellow2,
+                Constants.LEDColors.yellow3,
+                Constants.LEDColors.yellow4,
+                Constants.LEDColors.yellow5
+        };
+
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            setSingleLEDColor(i, coneColors[conePixels[i]]);
         }
     }
 
