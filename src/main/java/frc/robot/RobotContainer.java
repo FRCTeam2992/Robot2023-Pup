@@ -22,11 +22,12 @@ import frc.robot.commands.MoveTowerToScoringPosition;
 import frc.robot.commands.SetSwerveAngle;
 
 import frc.robot.commands.SetLEDsColor;
+import frc.robot.commands.SetLEDsCone;
+import frc.robot.commands.SetLEDsCube;
 import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoSingleLoadStationIntake;
-import frc.robot.commands.groups.StopIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -69,10 +70,10 @@ public class RobotContainer {
 
     public final LEDs mLEDs;
 
-    public final PowerDistribution pdh;
+    public final PowerDistribution pdp;
 
     public DigitalInput networkToggleSwitch = new DigitalInput(
-        Constants.RobotConstants.DeviceIDs.networkToggleSwitch);
+            Constants.RobotConstants.DeviceIDs.networkToggleSwitch);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -93,12 +94,14 @@ public class RobotContainer {
         // mClaw.setDefaultCommand(new StopClaw(mClaw));
 
         mLEDs = new LEDs();
-        mLEDs.setDefaultCommand(new LEDsToDefaultColor(mLEDs, mRobotState));
+        mLEDs.setDefaultCommand(new SetLEDsColor(mLEDs, Constants.LEDColors.blue));
 
         mAutoBuilder = new AutoBuilder(mRobotState, mDrivetrain, mArm, mClaw, mLEDs);
 
         // Setup the Auto Selectors
         mAutoBuilder.setupAutoSelector();
+
+        pdp = new PowerDistribution(1, ModuleType.kCTRE);
 
         // Add dashboard things
         addSubsystemsToDashboard();
@@ -109,8 +112,6 @@ public class RobotContainer {
         configureShuffleboardBindings();
         configRealButtonBindings();
         // (new TestControllers()).configTestButtonBindings(this);
-
-        pdh = new PowerDistribution(1, ModuleType.kRev);
     }
 
     /**
@@ -157,11 +158,11 @@ public class RobotContainer {
         // D-Pad
         controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
-        controller0.povUp().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.yellow));
+        controller0.povUp().onTrue(new SetLEDsCone(mLEDs));
         controller0.povUp()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
-        controller0.povDown().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
+        controller0.povDown().onTrue(new SetLEDsCube(mLEDs));
         controller0.povDown()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
@@ -194,7 +195,7 @@ public class RobotContainer {
         controller0.rightTrigger(0.6)
                 .onTrue(new ClawOuttake(mClaw, mRobotState));
 
-        controller0.rightStick().onTrue(new StopIntake(mArm, mClaw, mRobotState));
+        controller0.rightStick().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
         controller0.rightStick().onTrue(new HoldClaw(mClaw));
 
         // Back and Start
@@ -206,10 +207,76 @@ public class RobotContainer {
         // Joysticks Buttons
 
         // -----------------------controller1-----------------------
-        // ABXY
+        switch (Constants.controller1Mode) {
+
+            case XBox:
+                configureController1XBoxMappings();
+                break;
+
+            case Guitar:
+                configureController1GuitarMappings();
+                break;
+        }
+
+    }
+
+    private void configureController1GuitarMappings() {
+        // Color Neck Buttons
+
+        // Green/A
+
+        // Red/B
+
+        // Yellow/Y
+        controller1.y().onTrue(new SetLEDsCone(mLEDs));
+        controller1.y()
+                .onTrue(new InstantCommand(
+                        () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
+        // Blue/X
+        controller1.x().onTrue(new SetLEDsCube(mLEDs));
+        controller1.x()
+                .onTrue(new InstantCommand(
+                        () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
+
+        // Orange/LB
+
+        // Strummer
+
+        controller1.povDown().whileTrue(new MoveClaw(mClaw, Constants.ClawConstants.Intake.Speed.cone));
+        controller1.povUp().whileTrue(new MoveClaw(mClaw, -Constants.ClawConstants.Intake.Speed.cone));
+
+        // controller1.rightTrigger(0.6)
+        // .onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
+
+        // -+/Body buttons
+
+        controller1.start().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+        controller1.start().onTrue(new HoldClaw(mClaw));
+
+        // Wammy Bar
+
+        controller1.leftTrigger(0.6).whileTrue(
+                new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
+        controller1.leftTrigger(0.6).onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
+        controller1.leftTrigger(0.6).onFalse(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+        controller1.leftTrigger(0.6).onFalse(new HoldClaw(mClaw));
+
+        // controller1.leftStick().onTrue(new SetScoringTarget(mRobotState, controller0,
+        // controller1, mArm));
+
+        // Joystick
+        controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
+                new MoveArm(mArm, -0.40));
+        controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
+                new MoveArm(mArm, 0.40));
+    }
+
+    private void configureController1XBoxMappings() {
+        // Orange/LB
+
         controller1.y().whileTrue(new MoveClaw(mClaw, Constants.ClawConstants.Intake.Speed.cone));
 
-        // Bumpers/Triggers
+        // Strummer
         controller1.leftBumper().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
         controller1.leftBumper()
                 .onTrue(new InstantCommand(
@@ -219,27 +286,27 @@ public class RobotContainer {
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
 
-        controller1.leftTrigger(0.6).onTrue(new StopIntake(mArm, mClaw, mRobotState));
+        controller1.leftTrigger(0.6).onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
         controller1.leftTrigger(0.6).onTrue(new HoldClaw(mClaw));
         controller1.rightTrigger(0.6)
                 .onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
 
-        // Back and Start
+        // -+/Body buttons
         controller1.start().onTrue(new ToggleEndgameState(mRobotState, mLEDs));
 
-        // Joysticks and Buttons
+        // Wammy Bar
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
                 new MoveArm(mArm, -0.40));
         controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
                 new MoveArm(mArm, 0.40));
-
         controller1.leftStick().onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
+
     }
 
     private void configureShuffleboardBindings() {
-            SmartDashboard.putData("Arm To Point 100%, 10°",
-                            new MoveArmToPoint(mArm, mClaw, mDrivetrain, 1.0, 10.0, 30.0, -5.0));
-        if (Constants.debugDashboard) {            
+        SmartDashboard.putData("Arm To Point 100%, 10°",
+                new MoveArmToPoint(mArm, mClaw, mDrivetrain, 1.0, 10.0, 30.0, -5.0));
+        if (Constants.debugDashboard) {
             // SmartDashboard.putData("Re-init Arm Encoder", new InstantCommand(() ->
             // mArm.initArmMotorEncoder()));
 
@@ -249,11 +316,13 @@ public class RobotContainer {
             SmartDashboard.putNumber("Test Claw Cube In Spd %", 0.5);
             SmartDashboard.putNumber("Test Claw Cone In Spd %", 0.7);
             SmartDashboard.putData("Test Claw Intake", new TestClawIntake(mClaw, mRobotState));
-    
+
             SmartDashboard.putNumber("Test Claw Cube Out Spd %", 0.7);
             SmartDashboard.putNumber("Test Claw Cone Out Spd %", 0.5);
             SmartDashboard.putData("Test Claw Outtake", new TestClawOuttake(mClaw, mRobotState));
-    
+
+            SmartDashboard.putNumber("LED Current Draw", pdp.getCurrent(6));
+
             // SmartDashboard.putData("Reset Odometry to Red Inner Cone",
             // new InstantCommand(() -> mDrivetrain
             // .resetOdometryToPose(new Pose2d(1.89, 3.0307,
@@ -269,6 +338,7 @@ public class RobotContainer {
             SmartDashboard.putNumber("ArmTestMoveAngle", 0.0);
             SmartDashboard.putData("Test Move Arm", new TestArmMove(mArm));
             SmartDashboard.putData("Test PID Move Arm", new TestArmPID(mArm));
+            SmartDashboard.putData("turn Off LEDS", new SetLEDsColor(mLEDs, Constants.LEDColors.off));
 
             // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
@@ -284,59 +354,12 @@ public class RobotContainer {
     }
 
     public void addRobotStateToDashboard() {
-        SmartDashboard.putBoolean("Target: Left Grid High Left", false);
-        SmartDashboard.putBoolean("Target: Left Grid High Center", false);
-        SmartDashboard.putBoolean("Target: Left Grid High Right", false);
-        SmartDashboard.putBoolean("Target: Left Grid Mid Left", false);
+
         SmartDashboard.putBoolean("Target: Left Grid Mid Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverLeft &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidCenter);
-        SmartDashboard.putBoolean("Target: Left Grid Mid Right", false);
-        SmartDashboard.putBoolean("Target: Left Grid Low Left",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverLeft &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowLeft);
+                mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidCenter);
+
         SmartDashboard.putBoolean("Target: Left Grid Low Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverLeft &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowCenter);
-        SmartDashboard.putBoolean("Target: Left Grid Low Right",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverLeft &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowRight);
-
-        SmartDashboard.putBoolean("Target: Center Grid High Left", false);
-        SmartDashboard.putBoolean("Target: Center Grid High Center", false);
-        SmartDashboard.putBoolean("Target: Center Grid High Right", false);
-        SmartDashboard.putBoolean("Target: Center Grid Mid Left", false);
-        SmartDashboard.putBoolean("Target: Center Grid Mid Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridCenter &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidCenter);
-        SmartDashboard.putBoolean("Target: Center Grid Mid Right", false);
-        SmartDashboard.putBoolean("Target: Center Grid Low Left",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridCenter &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowLeft);
-        SmartDashboard.putBoolean("Target: Center Grid Low Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridCenter &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowCenter);
-        SmartDashboard.putBoolean("Target: Center Grid Low Right",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridCenter &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowRight);
-
-        SmartDashboard.putBoolean("Target: Right Grid High Left", false);
-        SmartDashboard.putBoolean("Target: Right Grid High Center", false);
-        SmartDashboard.putBoolean("Target: Right Grid High Right", false);
-        SmartDashboard.putBoolean("Target: Right Grid Mid Left", false);
-        SmartDashboard.putBoolean("Target: Right Grid Mid Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverRight &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidCenter);
-        SmartDashboard.putBoolean("Target: Right Grid Mid Right", false);
-        SmartDashboard.putBoolean("Target: Right Grid Low Left",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverRight &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowLeft);
-        SmartDashboard.putBoolean("Target: Right Grid Low Center",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverRight &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowCenter);
-        SmartDashboard.putBoolean("Target: Right Grid Low Right",
-                mRobotState.currentTargetedGrid == RobotState.TargetingGrid.GridDriverRight &&
-                        mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowRight);
+                mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowCenter);
 
         if (Constants.debugDashboard) {
             SmartDashboard.putBoolean("Blue Alliance",
