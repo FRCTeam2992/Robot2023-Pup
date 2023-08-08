@@ -249,7 +249,6 @@ public class LimeLight {
                 // return botpose_targetspace.getDoubleArray(new double[6]);
                 return null;
             case Camera:
-                // TODO: should return robot center offset from camera lens center
                 return null;
             default:
                 return null;

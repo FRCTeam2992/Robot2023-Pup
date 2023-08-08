@@ -45,11 +45,11 @@ public class Arm extends SubsystemBase {
     private double holdPosition; // arm motor encoder clicks
 
     public Arm() {
-        armMotor = new TalonFX(Constants.ArmConstants.DeviceIDs.armMotor, "CanBus2");
+        armMotor = new TalonFX(Constants.ArmConstants.DeviceIDs.armMotor);
         armMotor.setInverted(TalonFXInvertType.Clockwise);
         armMotor.setNeutralMode(NeutralMode.Brake);
 
-        armEncoder = new CANCoder(Constants.ArmConstants.DeviceIDs.armEncoder, "CanBus2");
+        armEncoder = new CANCoder(Constants.ArmConstants.DeviceIDs.armEncoder);
         armEncoder.configSensorDirection(false);
         armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 

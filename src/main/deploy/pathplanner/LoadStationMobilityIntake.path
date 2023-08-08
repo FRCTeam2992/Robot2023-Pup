@@ -177,7 +177,6 @@
     {
       "position": 0.05,
       "names": [
-        "UndeployElevator",
         "TowerMoveBackstop",
         "IntakeSpeedCube",
         "IntakeDeployGround"

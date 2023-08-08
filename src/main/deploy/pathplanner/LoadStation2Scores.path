@@ -171,15 +171,9 @@
       ]
     },
     {
-      "position": 4.3,
-      "names": [
-        "DeployElevator"
-      ]
-    },
-    {
       "position": 4.6,
       "names": [
-        "TowerMoveHighCenter"
+        "TowerMoveMidCenter"
       ]
     }
   ]

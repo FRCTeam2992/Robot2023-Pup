@@ -100,11 +100,6 @@ public class RobotState {
     }
 
     public enum GridTargetingPosition {
-        HighLeft(Constants.TowerConstants.scoreConeHigh, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
-        HighRight(Constants.TowerConstants.scoreConeHigh, Constants.ScoringGridConstants.conePoleOffsetYMeters),
-        HighCenter(Constants.TowerConstants.scoreCubeHigh, 0.0),
-        MidLeft(Constants.TowerConstants.scoreConeMid, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
-        MidRight(Constants.TowerConstants.scoreConeMid, Constants.ScoringGridConstants.conePoleOffsetYMeters),
         MidCenter(Constants.TowerConstants.scoreCubeMid, 0.0),
         LowLeft(Constants.TowerConstants.scoreFloor, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
         LowRight(Constants.TowerConstants.scoreFloor, Constants.ScoringGridConstants.conePoleOffsetYMeters),

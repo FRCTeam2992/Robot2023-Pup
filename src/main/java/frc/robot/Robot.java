@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+// import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.commands.CycleLEDs;
 import frc.robot.commands.SetLimeLightOdometryUpdates;
-import edu.wpi.first.wpilibj.DigitalInput;
+// import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
 
     public static Timer balanceTimer = new Timer();
 
-    private int networkToggleSwitchCounter = 0;
+    // private int networkToggleSwitchCounter = 0;
 
     // public static AddressableLED m_led;
     // public static AddressableLEDBuffer m_ledBuffer;
@@ -57,9 +57,6 @@ public class Robot extends TimedRobot {
         mRobotContainer = new RobotContainer();
 
         mRobotContainer.mDrivetrain.navx.zeroYaw();
-
-        mRobotContainer.mElevator.zeroElevatorEncoders();
-        mRobotContainer.mArm.setArmMotorNeutralMode(NeutralMode.Brake);
 
         mRobotContainer.mLEDs.setLEDStripColor(Constants.LEDColors.blue);
 
@@ -117,10 +114,8 @@ public class Robot extends TimedRobot {
             mRobotContainer.mRobotState.useLimelightOdometryUpdates = false;
         }
 
-        mRobotContainer.mElevator.onDisable();
         mRobotContainer.mArm.onDisable();
         mRobotContainer.mClaw.onDisable();
-        mRobotContainer.mButterflyWheels.onDisable();
         mRobotContainer.mDrivetrain.onDisable();
 
         CommandScheduler.getInstance().schedule(
@@ -143,20 +138,20 @@ public class Robot extends TimedRobot {
             slowAutoBuildCounter = 0;
         }
 
-        if (networkToggleSwitchCounter++ > 25) {
-            if (mRobotContainer.networkToggleSwitch.get() && !mRobotContainer.pdh.getSwitchableChannel()) {
-                mRobotContainer.pdh.setSwitchableChannel(true);
-                mRobotContainer.mRobotState.useLimelightOdometryUpdates = false;
-            }
-            if (!mRobotContainer.networkToggleSwitch.get() && !mRobotContainer.mRobotState.wasAutoLastMode
-                    && mRobotContainer.pdh.getSwitchableChannel()) {
-                // Don't run limelights while disabled unless transit from auto to teleop
-                mRobotContainer.pdh.setSwitchableChannel(false);
-                mRobotContainer.mRobotState.useLimelightOdometryUpdates = false;
-            }
-            networkToggleSwitchCounter = 0;
-        }
-
+        // TODO: Is this code needed anymore, if so how to change?
+        // if (networkToggleSwitchCounter++ > 25) {
+        //     if (mRobotContainer.networkToggleSwitch.get() && !mRobotContainer.pdh.getSwitchableChannel()) {
+        //         mRobotContainer.pdh.setSwitchableChannel(true);
+        //         mRobotContainer.mRobotState.useLimelightOdometryUpdates = false;
+        //     }
+        //     if (!mRobotContainer.networkToggleSwitch.get() && !mRobotContainer.mRobotState.wasAutoLastMode
+        //             && mRobotContainer.pdh.getSwitchableChannel()) {
+        //         // Don't run limelights while disabled unless transit from auto to teleop
+        //         mRobotContainer.pdh.setSwitchableChannel(false);
+        //         mRobotContainer.mRobotState.useLimelightOdometryUpdates = false;
+        //     }
+        //     networkToggleSwitchCounter = 0;
+        // }
     }
 
     /**

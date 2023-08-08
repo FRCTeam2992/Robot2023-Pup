@@ -2,34 +2,34 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.testing.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Elevator;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.SetArmPosition;
+import frc.robot.subsystems.Arm;
 
-public class SetElevatorPosition extends CommandBase {
-  /** Creates a new SetElevatorPosition. */
-  private Elevator mElevator;
+public class TestArmMove extends CommandBase {
+  private Arm mArm;
 
-  private double mPosition;
-
-  public SetElevatorPosition(Elevator subsystem, double position) {
+  /** Creates a new TestArmMove. */
+  public TestArmMove(Arm arm) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mElevator = subsystem;
-    mPosition = position;
-
-    addRequirements(mElevator);
+    mArm = arm;
+    addRequirements(arm);
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double angle = SmartDashboard.getNumber("ArmTestMoveAngle", 60);
+    System.out.println(">>>>>>>>>>>>>>>>> Moving arm from " + mArm.getArmCANCoderPositionCorrected() + " to " + angle);
+    CommandScheduler.getInstance().schedule(new SetArmPosition(mArm, angle));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mElevator.setElevatorPosition(mPosition);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +40,6 @@ public class SetElevatorPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mElevator.atPosition();
-
+    return true;
   }
 }

@@ -7,19 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
 import frc.robot.RobotState;
-import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorState;
 
 public class SetScoringTarget extends CommandBase {
     private RobotState mRobotState;
-    private Elevator mElevator;
     private Arm mArm;
     private CommandXboxController mController0;
     private CommandXboxController mController1;
@@ -67,12 +60,10 @@ public class SetScoringTarget extends CommandBase {
     }
 
     /** Creates a new SetScoringTarget. */
-    public SetScoringTarget(RobotState robotState, CommandXboxController controller0, CommandXboxController controller1,
-            Elevator elevator, Arm arm) {
+    public SetScoringTarget(RobotState robotState, CommandXboxController controller0, CommandXboxController controller1, Arm arm) {
         mRobotState = robotState;
         mController0 = controller0;
         mController1 = controller1;
-        mElevator = elevator;
         mArm = arm;
         // Note: We do not need to addRequirements for elevator and arm since they are
         // just
@@ -101,45 +92,24 @@ public class SetScoringTarget extends CommandBase {
         } else {
             JoystickPOVToAngle direction = JoystickPOVToAngle.fromValue(mController1.getHID().getPOV());
             switch (direction) {
-                case UpLeft:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighRight;
-                    break;
-                case Up:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighCenter;
-                    break;
-                case UpRight:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighLeft;
-                    break;
-                case Left:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidRight;
-                    break;
                 case Center:
                     mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidCenter;
-                    break;
-                case Right:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidLeft;
                     break;
                 case DownLeft:
                     mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowRight;
                     break;
-                case Down:
-                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowCenter;
-                    break;
                 case DownRight:
                     mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowLeft;
+                    break;
+                case Down:
+                default:
+                    mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowCenter;
                     break;
             }
         }
 
         if (mController0.leftTrigger(0.6).getAsBoolean()) {
-            Command moveCommand = new InstantCommand();
-            if (mElevator.getElevatorState() != mRobotState.currentTargetPosition.towerWaypoint.elevatorState()) {
-                moveCommand = new DeployElevator(mElevator, mArm, mRobotState, ElevatorState.Undeployed)
-                        .andThen(new WaitCommand(0.3))
-                        .andThen(new SafeDumbTowerToPosition(mElevator, mArm, mRobotState,
-                                Constants.TowerConstants.normal));
-            }
-            moveCommand = moveCommand.andThen(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
+            Command moveCommand = new MoveTowerToScoringPosition(mArm, mRobotState);
             CommandScheduler.getInstance().schedule(moveCommand);
         }
 
