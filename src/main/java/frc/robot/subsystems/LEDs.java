@@ -90,6 +90,8 @@ public class LEDs extends SubsystemBase {
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             setSingleLEDColor(i, cubeColors[cubePixels[i]]);
         }
+
+        m_led.setData(m_ledBuffer);
     }
 
     public void displayCone() {
@@ -124,6 +126,8 @@ public class LEDs extends SubsystemBase {
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             setSingleLEDColor(i, coneColors[conePixels[i]]);
         }
+
+        m_led.setData(m_ledBuffer);
     }
 
     public void setSingleLEDColor(int pixel, Color color) {
