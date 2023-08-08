@@ -338,7 +338,11 @@ public class RobotContainer {
             SmartDashboard.putNumber("ArmTestMoveAngle", 0.0);
             SmartDashboard.putData("Test Move Arm", new TestArmMove(mArm));
             SmartDashboard.putData("Test PID Move Arm", new TestArmPID(mArm));
-            SmartDashboard.putData("turn Off LEDS", new SetLEDsColor(mLEDs, Constants.LEDColors.off));
+
+            SmartDashboard.putData("Set LEDs Cone Mode", new SetLEDsCone(mLEDs));
+            SmartDashboard.putData("Set LEDs Cube Mode", new SetLEDsCube(mLEDs));
+            SmartDashboard.putData("Turn LEDs Blue", new SetLEDsColor(mLEDs, Constants.LEDColors.blue));
+            SmartDashboard.putData("Turn Off LEDS", new SetLEDsColor(mLEDs, Constants.LEDColors.off));
 
             // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
