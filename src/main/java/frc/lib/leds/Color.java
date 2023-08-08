@@ -23,4 +23,8 @@ public class Color {
     public int b() {
         return mB;
     }
+
+    public String toString() {
+        return "Color: R(" + mR + "),G(" + mG + "),B(" + mB + ")";
+    }
 }
