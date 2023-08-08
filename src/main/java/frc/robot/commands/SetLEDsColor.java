@@ -31,6 +31,12 @@ public class SetLEDsColor extends CommandBase {
   public void execute() {
   }
 
+  // Determines whether this command can run during disabled mode
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

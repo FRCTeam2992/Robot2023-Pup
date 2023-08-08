@@ -21,12 +21,17 @@ public class SetLEDsCone extends CommandBase {
   @Override
   public void initialize() {
     mLEDs.displayCone();
-    System.out.println("///////////////////////////////////////// Displaying Cone");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+  }
+
+  // Determines whether this command can run during disabled mode
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
   }
 
   // Called once the command ends or is interrupted.
