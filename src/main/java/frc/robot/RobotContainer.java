@@ -94,14 +94,14 @@ public class RobotContainer {
         // mClaw.setDefaultCommand(new StopClaw(mClaw));
 
         mLEDs = new LEDs();
-        mLEDs.setDefaultCommand(new SetLEDsColor(mLEDs, Constants.LEDColors.blue));
+        mLEDs.setDefaultCommand(new SetLEDsColor(mLEDs, Constants.LEDColors.off));
 
         mAutoBuilder = new AutoBuilder(mRobotState, mDrivetrain, mArm, mClaw, mLEDs);
 
         // Setup the Auto Selectors
         mAutoBuilder.setupAutoSelector();
 
-        pdp = new PowerDistribution(1, ModuleType.kCTRE);
+        pdp = new PowerDistribution(0, ModuleType.kCTRE);
 
         // Add dashboard things
         addSubsystemsToDashboard();
@@ -322,6 +322,7 @@ public class RobotContainer {
             SmartDashboard.putData("Test Claw Outtake", new TestClawOuttake(mClaw, mRobotState));
 
             SmartDashboard.putNumber("LED Current Draw", pdp.getCurrent(6));
+            SmartDashboard.putNumber("Claw Current Draw", pdp.getCurrent(7));
 
             // SmartDashboard.putData("Reset Odometry to Red Inner Cone",
             // new InstantCommand(() -> mDrivetrain
@@ -344,6 +345,7 @@ public class RobotContainer {
             SmartDashboard.putData("Set LEDs Cube Mode", new SetLEDsCube(mLEDs));
             SmartDashboard.putData("Turn LEDs Blue", new SetLEDsColor(mLEDs, Constants.LEDColors.blue));
             SmartDashboard.putData("Turn Off LEDS", new SetLEDsColor(mLEDs, Constants.LEDColors.off));
+            SmartDashboard.putData("Max LEDS", new SetLEDsColor(mLEDs, Constants.LEDColors.max));
 
             // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
