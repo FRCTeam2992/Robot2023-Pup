@@ -45,11 +45,7 @@ public final class Constants {
         public static final Color yellow3 = new Color(255, 219, 0);
         public static final Color yellow4 = new Color(255, 186, 0);
         public static final Color yellow5 = new Color(255, 174, 0);
-        // public static final Color yellow1 = new Color(127, 126, 112);
-        // public static final Color yellow2 = new Color(127, 123, 54);
-        // public static final Color yellow3 = new Color(127, 110, 0);
-        // public static final Color yellow4 = new Color(127, 93, 0);
-        // public static final Color yellow5 = new Color(127, 87, 0);
+
 
         public static final Color purple1 = new Color(232, 144, 255);
         public static final Color purple2 = new Color(149, 8, 187);
