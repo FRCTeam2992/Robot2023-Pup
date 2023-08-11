@@ -77,10 +77,10 @@ public final class Constants {
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = -90.4; //-174.3
-        public static final double frontRightOffset = 101.5; //95.0 //90.8
-        public static final double rearLeftOffset = -145.1; //180.6 //170.6
-        public static final double rearRightOffset = 147.0; //28.3 //31.0
+        public static final double frontLeftOffset = 146.6; // -174.3
+        public static final double frontRightOffset = -145.2; // 95.0 //90.8
+        public static final double rearLeftOffset = 102.1; // 180.6 //170.6
+        public static final double rearRightOffset = -90.4; // 28.3 //31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
@@ -92,7 +92,7 @@ public final class Constants {
             // Swerve Turn PIDs
             public static final double turnP = 0.013; // .013
             public static final double turnI = 0.0;// .0
-            public static final double turnD = 0.00005;
+            public static final double turnD = 0.00005; // .00005
         }
 
         public static class AutoScorePIDConstants {
@@ -155,19 +155,19 @@ public final class Constants {
         public static final double maxTurnToX = 20.0; // degrees/sec
 
         public static class CanIDs {
-            public static int frontLeftDrive = 2;
-            public static int frontLeftTurn = 3;
-            public static int frontRightDrive = 4;
-            public static int frontRightTurn = 5;
-            public static int rearLeftDrive = 6;
-            public static int rearLeftTurn = 7;
-            public static int rearRightDrive = 8;
-            public static int rearRightTurn = 9;
+            public static int frontLeftDrive = 8;
+            public static int frontLeftTurn = 9;
+            public static int frontRightDrive = 6;
+            public static int frontRightTurn = 7;
+            public static int rearLeftDrive = 4;
+            public static int rearLeftTurn = 5;
+            public static int rearRightDrive = 2;
+            public static int rearRightTurn = 3;
 
-            public static int frontLeftEncoder = 3;
-            public static int frontRightEncoder = 5;
-            public static int rearLeftEncoder = 7;
-            public static int rearRightEncoder = 9;
+            public static int frontLeftEncoder = 9;
+            public static int frontRightEncoder = 7;
+            public static int rearLeftEncoder = 5;
+            public static int rearRightEncoder = 3;
         }
 
         // Field Coordinates
