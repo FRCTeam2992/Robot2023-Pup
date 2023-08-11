@@ -25,12 +25,33 @@ public final class Constants {
     public static final boolean dataLogging = false;
     public static final boolean debugDashboard = true;
 
+    public static final ControlMode controller1Mode = ControlMode.Guitar;
+
+    public enum ControlMode {
+        Guitar,
+        XBox;
+    }
+
     public static class LEDColors {
         public static final Color purple = new Color(210, 75, 230);
         public static final Color yellow = new Color(255, 160, 0);
         public static final Color blue = new Color(0, 0, 255);
         public static final Color white = new Color(210, 200, 180);
         public static final Color off = new Color(0, 0, 0);
+        public static final Color max = new Color(255, 255, 255);
+
+        public static final Color yellow1 = new Color(255, 253, 225);
+        public static final Color yellow2 = new Color(255, 247, 109);
+        public static final Color yellow3 = new Color(255, 219, 0);
+        public static final Color yellow4 = new Color(255, 186, 0);
+        public static final Color yellow5 = new Color(255, 174, 0);
+
+
+        public static final Color purple1 = new Color(232, 144, 255);
+        public static final Color purple2 = new Color(149, 8, 187);
+        public static final Color purple3 = new Color(116, 0, 147);
+        public static final Color purple4 = new Color(95, 0, 121);
+        public static final Color purple5 = new Color(82, 0, 104);
     }
 
     public static class DrivetrainConstants {
