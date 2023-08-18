@@ -153,7 +153,7 @@ public class RobotContainer {
         // X = ground intake cube
         controller0.x().onTrue(
                 new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
-        controller0.x().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
+        controller0.x().onTrue(new SetLEDsCube(mLEDs));
 
         // D-Pad
         controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
@@ -252,8 +252,6 @@ public class RobotContainer {
         controller1.povDown().whileTrue(new MoveClaw(mClaw, -0.8));
         controller1.povUp().whileTrue(new MoveClaw(mClaw, 0.8));
 
-        // controller1.rightTrigger(0.6)
-        // .onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
 
         // -+/Body buttons (+ = start; - = back)
 
@@ -262,16 +260,7 @@ public class RobotContainer {
 
         // Wammy Bar
 
-        // controller1.leftTrigger(0.6).whileTrue(
-        // new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
-        // controller1.leftTrigger(0.6).onTrue(new SetLEDsColor(mLEDs,
-        // Constants.LEDColors.purple));
-        // controller1.leftTrigger(0.6).onFalse(new SetArmPosition(mArm,
-        // Constants.TowerConstants.normal.angle()));
-        // controller1.leftTrigger(0.6).onFalse(new HoldClaw(mClaw));
 
-        // controller1.leftStick().onTrue(new SetScoringTarget(mRobotState, controller0,
-        // controller1, mArm));
 
         // Joystick (Maps to left stick and POV Simultaneously)
     }
@@ -301,7 +290,7 @@ public class RobotContainer {
                                         () -> controller1.b().getAsBoolean()));
 
         // -+/Body buttons
-        // controller1.start().onTrue(new ToggleEndgameState(mRobotState, mLEDs));
+
 
         // Wammy Bar
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
