@@ -135,8 +135,11 @@ public class RobotContainer {
         // ABXY
         // A = auto-align for scoring
         controller0.a().onTrue(new InstantCommand(() -> {
-            // FIXME: This needs to know which direction we are scoring.
-            mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.SCORE_BACK);
+            if (mRobotState.currentTargetPosition.isFront()) {
+                mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.SCORE_FRONT);
+            } else {
+                mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.SCORE_BACK);
+            }
         }));
         controller0.a().onFalse(new InstantCommand(() -> {
             mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.OFF);
