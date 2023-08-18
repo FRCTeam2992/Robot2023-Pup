@@ -32,6 +32,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Drivetrain.AutoAlignmentMode;
 import frc.robot.testing.commands.TestArmPID;
 import frc.robot.testing.commands.TestClawIntake;
 import frc.robot.testing.commands.TestClawOuttake;
@@ -133,20 +134,25 @@ public class RobotContainer {
         // ABXY
         // A = auto-align for scoring
         controller0.a().onTrue(new InstantCommand(() -> {
-            mDrivetrain.setScoringMode(true);
+            // FIXME: This needs to know which direction we are scoring.
+            mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.SCORE_BACK);
         }));
         controller0.a().onFalse(new InstantCommand(() -> {
-            mDrivetrain.setScoringMode(false);
+            mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.OFF);
         }));
 
         // B = intake from load station
         controller0.b().onTrue(
                 new AutoSingleLoadStationIntake(mArm, mClaw, mLEDs, mRobotState));
         controller0.b().onTrue(new InstantCommand(() -> {
-            mDrivetrain.setLoadingMode(true);
+            if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+                mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.LOAD_BLUE);
+            } else {
+                mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.LOAD_RED);
+            }
         }));
         controller0.b().onFalse(new InstantCommand(() -> {
-            mDrivetrain.setLoadingMode(false);
+            mDrivetrain.setAutoAlignmentMode(AutoAlignmentMode.OFF);
         }));
 
         // X = ground intake cube
