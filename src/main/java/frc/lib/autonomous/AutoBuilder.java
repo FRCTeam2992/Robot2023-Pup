@@ -58,9 +58,9 @@ public class AutoBuilder {
 
         eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
         eventMap.put("TowerMoveMidCenter", new ScheduleCommand(new SetArmPosition(
-                mArm, GridTargetingPosition.MidCenter.towerWaypoint.angle())).asProxy());
+                mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())).asProxy());
         eventMap.put("TowerMoveThrowCube", new ScheduleCommand(new SetArmPosition(
-                mArm, GridTargetingPosition.ThrowCube.towerWaypoint.angle())).asProxy());
+                mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())).asProxy());
         eventMap.put("TowerMoveGroundIntake", new ScheduleCommand(new SetArmPosition(
                 mArm, Constants.TowerConstants.cubeGroundIntake.angle())).asProxy());
         eventMap.put("TowerMoveHiGroundIntake", new ScheduleCommand(new SetArmPosition(
@@ -158,7 +158,7 @@ public class AutoBuilder {
                             mRobotState.currentOuttakeType = OuttakeType.Mid_Cube;
                             mRobotState.intakeMode = IntakeModeState.Cube;
                         }))
-                        .andThen(new SetArmPosition(mArm, GridTargetingPosition.MidCenter.towerWaypoint.angle())
+                        .andThen(new SetArmPosition(mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())
                                 .withTimeout(0.3)
                                 .raceWith(new MoveClaw(mClaw, 0.5)))
                         .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(0.5));

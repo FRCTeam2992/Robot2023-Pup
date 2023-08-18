@@ -5,17 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.leds.Color;
 import frc.robot.subsystems.LEDs;
 
-public class SetLEDsColor extends CommandBase {
-  private Color mColor;
+public class SetLEDsCone extends CommandBase {
   private LEDs mLEDs;
 
-  /** Creates a new SetLEDsColor. */
-  public SetLEDsColor(LEDs subsystem, Color color) {
+  /** Creates a new SetLEDsCone. */
+  public SetLEDsCone(LEDs subsystem) {
     mLEDs = subsystem;
-    mColor = color;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mLEDs);
   }
@@ -23,7 +20,7 @@ public class SetLEDsColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mLEDs.setLEDStripColor(mColor);
+    mLEDs.displayCone();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

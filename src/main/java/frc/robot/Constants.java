@@ -25,12 +25,33 @@ public final class Constants {
     public static final boolean dataLogging = false;
     public static final boolean debugDashboard = true;
 
+    public static final ControlMode controller1Mode = ControlMode.Guitar;
+
+    public enum ControlMode {
+        Guitar,
+        XBox;
+    }
+
     public static class LEDColors {
         public static final Color purple = new Color(210, 75, 230);
         public static final Color yellow = new Color(255, 160, 0);
         public static final Color blue = new Color(0, 0, 255);
         public static final Color white = new Color(210, 200, 180);
         public static final Color off = new Color(0, 0, 0);
+        public static final Color max = new Color(255, 255, 255);
+
+        public static final Color yellow1 = new Color(255, 253, 225);
+        public static final Color yellow2 = new Color(255, 247, 109);
+        public static final Color yellow3 = new Color(255, 219, 0);
+        public static final Color yellow4 = new Color(255, 186, 0);
+        public static final Color yellow5 = new Color(255, 174, 0);
+
+
+        public static final Color purple1 = new Color(232, 144, 255);
+        public static final Color purple2 = new Color(149, 8, 187);
+        public static final Color purple3 = new Color(116, 0, 147);
+        public static final Color purple4 = new Color(95, 0, 121);
+        public static final Color purple5 = new Color(82, 0, 104);
     }
 
     public static class DrivetrainConstants {
@@ -56,10 +77,10 @@ public final class Constants {
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = -90.4; //-174.3
-        public static final double frontRightOffset = 101.5; //95.0 //90.8
-        public static final double rearLeftOffset = -145.1; //180.6 //170.6
-        public static final double rearRightOffset = 147.0; //28.3 //31.0
+        public static final double frontLeftOffset = 146.6; // -174.3
+        public static final double frontRightOffset = -145.2; // 95.0 //90.8
+        public static final double rearLeftOffset = 102.1; // 180.6 //170.6
+        public static final double rearRightOffset = -90.4; // 28.3 //31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
@@ -71,7 +92,7 @@ public final class Constants {
             // Swerve Turn PIDs
             public static final double turnP = 0.013; // .013
             public static final double turnI = 0.0;// .0
-            public static final double turnD = 0.00005;
+            public static final double turnD = 0.00005; // .00005
         }
 
         public static class AutoScorePIDConstants {
@@ -134,19 +155,19 @@ public final class Constants {
         public static final double maxTurnToX = 20.0; // degrees/sec
 
         public static class CanIDs {
-            public static int frontLeftDrive = 2;
-            public static int frontLeftTurn = 3;
-            public static int frontRightDrive = 4;
-            public static int frontRightTurn = 5;
-            public static int rearLeftDrive = 6;
-            public static int rearLeftTurn = 7;
-            public static int rearRightDrive = 8;
-            public static int rearRightTurn = 9;
+            public static int frontLeftDrive = 8;
+            public static int frontLeftTurn = 9;
+            public static int frontRightDrive = 6;
+            public static int frontRightTurn = 7;
+            public static int rearLeftDrive = 4;
+            public static int rearLeftTurn = 5;
+            public static int rearRightDrive = 2;
+            public static int rearRightTurn = 3;
 
-            public static int frontLeftEncoder = 3;
-            public static int frontRightEncoder = 5;
-            public static int rearLeftEncoder = 7;
-            public static int rearRightEncoder = 9;
+            public static int frontLeftEncoder = 9;
+            public static int frontRightEncoder = 7;
+            public static int rearLeftEncoder = 5;
+            public static int rearRightEncoder = 3;
         }
 
         // Field Coordinates
@@ -180,19 +201,33 @@ public final class Constants {
     }
 
     public static class TowerConstants {
+
+        public static Waypoint frontCubeLow = new Waypoint(-87.0, OuttakeType.Hybrid);
+        public static Waypoint frontCubeMid = new Waypoint(-72.0, OuttakeType.Front_Mid_Cube);
+        public static Waypoint rearCubeMid = new Waypoint(40.0, OuttakeType.Rear_Mid_Cube);
+        public static Waypoint rearCubelow = new Waypoint(70.0, OuttakeType.Rear_Mid_Cube);
+        public static Waypoint normal = new Waypoint(0.0, OuttakeType.Unknown);
+
+        public static Waypoint cubeGroundIntake = new Waypoint(106.00, OuttakeType.Unknown);
+
+        public static Waypoint singleLoadStation = new Waypoint(-72.00, OuttakeType.Unknown);
+
         public static Waypoint scoreFloor = new Waypoint(80.00, OuttakeType.Hybrid);
-        public static Waypoint scoreCubeMid = new Waypoint(45.1, OuttakeType.Mid_Cube);
-        public static Waypoint normal = new Waypoint(20, OuttakeType.Unknown);
+        public static Waypoint scoreCubeMid = new Waypoint(45.1,
+                OuttakeType.Mid_Cube);
 
-        public static Waypoint cubeGroundIntake = new Waypoint(129.00, OuttakeType.Unknown);
-        public static Waypoint cubeWall3GroundIntake = new Waypoint(125.00, OuttakeType.Unknown);
+        public static Waypoint cubeWall3GroundIntake = new Waypoint(125.00,
+                OuttakeType.Unknown);
 
-        public static Waypoint midThrowCube = new Waypoint(35.0, OuttakeType.Mid_Cube);
-        public static Waypoint rearLowThrowCube = new Waypoint(-79.0, OuttakeType.Rear_Low_Cube);
-        public static Waypoint rearMidThrowCube = new Waypoint(-79.0, OuttakeType.Mid_Cube);
-        public static Waypoint rearSafePoint = new Waypoint(-72, OuttakeType.Assumed_Cube);
+        public static Waypoint midThrowCube = new Waypoint(35.0,
+                OuttakeType.Mid_Cube);
+        public static Waypoint rearLowThrowCube = new Waypoint(-79.0,
+                OuttakeType.Rear_Low_Cube);
+        public static Waypoint rearMidThrowCube = new Waypoint(-79.0,
+                OuttakeType.Mid_Cube);
+        public static Waypoint rearSafePoint = new Waypoint(-72,
+                OuttakeType.Assumed_Cube);
 
-        public static Waypoint singleLoadStation = new Waypoint(-69.00, OuttakeType.Unknown);
     }
 
     public static class ArmConstants {
@@ -218,7 +253,7 @@ public final class Constants {
         public static double gearRatio = 64.0 * (32.0 / 12.0);
         public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
         public static double armAngleToleranceDeg = 0.5; // Moves within 1 degree are "close enough"
-        public static double CANCoderOffset = 145.6;
+        public static double CANCoderOffset = 144.3;
 
         public static class ArmSlopConstants {
             public static double topZoneLowEdge = 12.0; // Above this may be n the slop zone
