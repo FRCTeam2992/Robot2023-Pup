@@ -201,19 +201,33 @@ public final class Constants {
     }
 
     public static class TowerConstants {
+
+        public static Waypoint frontCubeLow = new Waypoint(-87.0, OuttakeType.Hybrid);
+        public static Waypoint frontCubeMid = new Waypoint(-72.0, OuttakeType.Front_Mid_Cube);
+        public static Waypoint rearCubeMid = new Waypoint(40.0, OuttakeType.Rear_Mid_Cube);
+        public static Waypoint rearCubelow = new Waypoint(70.0, OuttakeType.Rear_Mid_Cube);
+        public static Waypoint normal = new Waypoint(0.0, OuttakeType.Unknown);
+
+        public static Waypoint cubeGroundIntake = new Waypoint(106.00, OuttakeType.Unknown);
+
+        public static Waypoint singleLoadStation = new Waypoint(-72.00, OuttakeType.Unknown);
+
         public static Waypoint scoreFloor = new Waypoint(80.00, OuttakeType.Hybrid);
-        public static Waypoint scoreCubeMid = new Waypoint(45.1, OuttakeType.Mid_Cube);
-        public static Waypoint normal = new Waypoint(20, OuttakeType.Unknown);
+        public static Waypoint scoreCubeMid = new Waypoint(45.1,
+                OuttakeType.Mid_Cube);
 
-        public static Waypoint cubeGroundIntake = new Waypoint(129.00, OuttakeType.Unknown);
-        public static Waypoint cubeWall3GroundIntake = new Waypoint(125.00, OuttakeType.Unknown);
+        public static Waypoint cubeWall3GroundIntake = new Waypoint(125.00,
+                OuttakeType.Unknown);
 
-        public static Waypoint midThrowCube = new Waypoint(35.0, OuttakeType.Mid_Cube);
-        public static Waypoint rearLowThrowCube = new Waypoint(-79.0, OuttakeType.Rear_Low_Cube);
-        public static Waypoint rearMidThrowCube = new Waypoint(-79.0, OuttakeType.Mid_Cube);
-        public static Waypoint rearSafePoint = new Waypoint(-72, OuttakeType.Assumed_Cube);
+        public static Waypoint midThrowCube = new Waypoint(35.0,
+                OuttakeType.Mid_Cube);
+        public static Waypoint rearLowThrowCube = new Waypoint(-79.0,
+                OuttakeType.Rear_Low_Cube);
+        public static Waypoint rearMidThrowCube = new Waypoint(-79.0,
+                OuttakeType.Mid_Cube);
+        public static Waypoint rearSafePoint = new Waypoint(-72,
+                OuttakeType.Assumed_Cube);
 
-        public static Waypoint singleLoadStation = new Waypoint(-69.00, OuttakeType.Unknown);
     }
 
     public static class ArmConstants {
@@ -239,7 +253,7 @@ public final class Constants {
         public static double gearRatio = 64.0 * (32.0 / 12.0);
         public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
         public static double armAngleToleranceDeg = 0.5; // Moves within 1 degree are "close enough"
-        public static double CANCoderOffset = 145.6;
+        public static double CANCoderOffset = 144.3;
 
         public static class ArmSlopConstants {
             public static double topZoneLowEdge = 12.0; // Above this may be n the slop zone

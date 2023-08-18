@@ -153,7 +153,7 @@ public class RobotContainer {
         // X = ground intake cube
         controller0.x().onTrue(
                 new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
-        controller0.x().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
+        controller0.x().onTrue(new SetLEDsCube(mLEDs));
 
         // D-Pad
         controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
@@ -224,8 +224,12 @@ public class RobotContainer {
         // Color Neck Buttons
 
         // Green/A
+        controller1.a().onTrue(new SetScoringTarget(mArm, mRobotState, () -> true,
+                        () -> controller1.leftTrigger(0.6).getAsBoolean()));
 
         // Red/B
+        controller1.b().onTrue(new SetScoringTarget(mArm, mRobotState, () -> false,
+                        () -> controller1.leftTrigger(0.6).getAsBoolean()));
 
         // Yellow/Y
         controller1.y().onTrue(new SetLEDsCone(mLEDs));
@@ -240,67 +244,59 @@ public class RobotContainer {
 
         // Orange/LB
 
+        controller1.leftBumper().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+        controller1.leftBumper().onTrue(new HoldClaw(mClaw));
+
         // Strummer
 
-        controller1.povDown().whileTrue(new MoveClaw(mClaw, Constants.ClawConstants.Intake.Speed.cone));
-        controller1.povUp().whileTrue(new MoveClaw(mClaw, -Constants.ClawConstants.Intake.Speed.cone));
+        controller1.povDown().whileTrue(new MoveClaw(mClaw, -0.8));
+        controller1.povUp().whileTrue(new MoveClaw(mClaw, 0.8));
 
-        // controller1.rightTrigger(0.6)
-        // .onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
 
-        // -+/Body buttons
+        // -+/Body buttons (+ = start; - = back)
 
-        controller1.start().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
-        controller1.start().onTrue(new HoldClaw(mClaw));
+        controller1.start().whileTrue(new MoveArm(mArm, 0.2));
+        controller1.back().whileTrue(new MoveArm(mArm, -0.2));
 
         // Wammy Bar
 
-        controller1.leftTrigger(0.6).whileTrue(
-                new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
-        controller1.leftTrigger(0.6).onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
-        controller1.leftTrigger(0.6).onFalse(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
-        controller1.leftTrigger(0.6).onFalse(new HoldClaw(mClaw));
 
-        // controller1.leftStick().onTrue(new SetScoringTarget(mRobotState, controller0,
-        // controller1, mArm));
 
-        // Joystick
-        controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
-                new MoveArm(mArm, -0.40));
-        controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                new MoveArm(mArm, 0.40));
+        // Joystick (Maps to left stick and POV Simultaneously)
     }
 
     private void configureController1XBoxMappings() {
-        // Orange/LB
+            // XYAB
 
         controller1.y().whileTrue(new MoveClaw(mClaw, Constants.ClawConstants.Intake.Speed.cone));
 
+        controller1.x().whileTrue(new MoveClaw(mClaw, -Constants.ClawConstants.Intake.Speed.cone));
+
         // Strummer
-        controller1.leftBumper().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.purple));
+        controller1.leftBumper().onTrue(new SetLEDsCube(mLEDs));
         controller1.leftBumper()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
-        controller1.rightBumper().onTrue(new SetLEDsColor(mLEDs, Constants.LEDColors.yellow));
+        controller1.rightBumper().onTrue(new SetLEDsCone(mLEDs));
         controller1.rightBumper()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
 
         controller1.leftTrigger(0.6).onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
         controller1.leftTrigger(0.6).onTrue(new HoldClaw(mClaw));
+
         controller1.rightTrigger(0.6)
-                .onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
+                        .onTrue(new SetScoringTarget(mArm, mRobotState, () -> controller1.povDown().getAsBoolean(),
+                                        () -> controller1.b().getAsBoolean()));
 
         // -+/Body buttons
-        controller1.start().onTrue(new ToggleEndgameState(mRobotState, mLEDs));
+
 
         // Wammy Bar
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
                 new MoveArm(mArm, -0.40));
         controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                new MoveArm(mArm, 0.40));
-        controller1.leftStick().onTrue(new SetScoringTarget(mRobotState, controller0, controller1, mArm));
-
+                        new MoveArm(mArm, 0.40));
     }
 
     private void configureShuffleboardBindings() {
@@ -362,11 +358,17 @@ public class RobotContainer {
 
     public void addRobotStateToDashboard() {
 
-        SmartDashboard.putBoolean("Target: Left Grid Mid Center",
-                mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidCenter);
+            SmartDashboard.putBoolean("Target: Low Back",
+                            mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowBack);
 
-        SmartDashboard.putBoolean("Target: Left Grid Low Center",
-                mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowCenter);
+            SmartDashboard.putBoolean("Target: Low Front",
+                            mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.LowFront);
+
+            SmartDashboard.putBoolean("Target: Mid Back",
+                            mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidBack);
+
+            SmartDashboard.putBoolean("Target: Mid Front",
+                            mRobotState.currentTargetPosition == RobotState.GridTargetingPosition.MidFront);
 
         if (Constants.debugDashboard) {
             SmartDashboard.putBoolean("Blue Alliance",
