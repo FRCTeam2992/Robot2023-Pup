@@ -25,7 +25,6 @@ import frc.robot.commands.SetLEDsColor;
 import frc.robot.commands.SetLEDsCone;
 import frc.robot.commands.SetLEDsCube;
 import frc.robot.commands.SetScoringTarget;
-import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoSingleLoadStationIntake;
 import frc.robot.subsystems.Arm;
@@ -38,6 +37,9 @@ import frc.robot.testing.commands.TestArmPID;
 import frc.robot.testing.commands.TestClawIntake;
 import frc.robot.testing.commands.TestClawOuttake;
 import frc.robot.testing.commands.TestArmMove;
+
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -95,7 +97,7 @@ public class RobotContainer {
         // mClaw.setDefaultCommand(new StopClaw(mClaw));
 
         mLEDs = new LEDs();
-        mLEDs.setDefaultCommand(new SetLEDsColor(mLEDs, Constants.LEDColors.off));
+        mLEDs.setDefaultCommand(new LEDsToDefaultColor(mLEDs, mRobotState));
 
         mAutoBuilder = new AutoBuilder(mRobotState, mDrivetrain, mArm, mClaw, mLEDs);
 
@@ -162,29 +164,20 @@ public class RobotContainer {
         // X = ground intake cube
         controller0.x().onTrue(
                 new AutoGroundIntakeCube(mArm, mClaw, mLEDs, mRobotState));// cubes
-        controller0.x().onTrue(new SetLEDsCube(mLEDs));
+        controller0.x().onTrue(new InstantCommand(
+            () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
 
         // D-Pad
         controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
-        controller0.povUp().onTrue(new SetLEDsCone(mLEDs));
         controller0.povUp()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
-        controller0.povDown().onTrue(new SetLEDsCube(mLEDs));
         controller0.povDown()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
 
         // Bumpers/Triggers
-        controller0.leftBumper().onTrue(new InstantCommand(
-                () -> {
-                    mDrivetrain.setDoFieldOreint(false);
-                }));// Disable Field Orient
-        controller0.leftBumper().onFalse(new InstantCommand(
-                () -> {
-                    mDrivetrain.setDoFieldOreint(true);
-                }));// Disable Field Orient
 
         controller0.rightBumper().onTrue(new InstantCommand(
                 () -> {
@@ -204,7 +197,8 @@ public class RobotContainer {
         controller0.rightTrigger(0.6)
                 .onTrue(new ClawOuttake(mClaw, mRobotState));
 
-        controller0.rightStick().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+        controller0.rightStick().onTrue(
+            new SetArmPosition(mArm, TowerConstants.normal.angle()));
         controller0.rightStick().onTrue(new HoldClaw(mClaw));
 
         // Back and Start
@@ -233,20 +227,20 @@ public class RobotContainer {
         // Color Neck Buttons
 
         // Green/A
-        controller1.a().onTrue(new SetScoringTarget(mArm, mRobotState, () -> true,
-                        () -> controller1.leftTrigger(0.6).getAsBoolean()));
+        controller1.a().onTrue(new SetScoringTarget(mRobotState, 
+                        (BooleanSupplier) () -> true,
+                        (BooleanSupplier) () -> controller1.getRightX() >= 0.2));
 
         // Red/B
-        controller1.b().onTrue(new SetScoringTarget(mArm, mRobotState, () -> false,
-                        () -> controller1.leftTrigger(0.6).getAsBoolean()));
+        controller1.b().onTrue(new SetScoringTarget(mRobotState, 
+                        (BooleanSupplier) () -> false,
+                        (BooleanSupplier) () -> controller1.getRightX() >= 0.2));
 
         // Yellow/Y
-        controller1.y().onTrue(new SetLEDsCone(mLEDs));
         controller1.y()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
         // Blue/X
-        controller1.x().onTrue(new SetLEDsCube(mLEDs));
         controller1.x()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
@@ -282,11 +276,9 @@ public class RobotContainer {
         controller1.x().whileTrue(new MoveClaw(mClaw, -Constants.ClawConstants.Intake.Speed.cone));
 
         // Strummer
-        controller1.leftBumper().onTrue(new SetLEDsCube(mLEDs));
         controller1.leftBumper()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
-        controller1.rightBumper().onTrue(new SetLEDsCone(mLEDs));
         controller1.rightBumper()
                 .onTrue(new InstantCommand(
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
@@ -295,8 +287,9 @@ public class RobotContainer {
         controller1.leftTrigger(0.6).onTrue(new HoldClaw(mClaw));
 
         controller1.rightTrigger(0.6)
-                        .onTrue(new SetScoringTarget(mArm, mRobotState, () -> controller1.povDown().getAsBoolean(),
-                                        () -> controller1.b().getAsBoolean()));
+                        .onTrue(new SetScoringTarget(mRobotState,
+                                (BooleanSupplier) controller1.povDown(),
+                                (BooleanSupplier) controller1.b()));
 
         // -+/Body buttons
 
@@ -305,7 +298,7 @@ public class RobotContainer {
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
                 new MoveArm(mArm, -0.40));
         controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                        new MoveArm(mArm, 0.40));
+                new MoveArm(mArm, 0.40));
     }
 
     private void configureShuffleboardBindings() {
