@@ -112,6 +112,10 @@ public class RobotState {
             this.towerWaypoint = waypoint;
             this.lateralScoringOffsetMeters = yOffset;
         }
+        
+        public boolean isFront() {
+            return (this == LowFront || this == MidFront);
+        }
     }
 
     public double currentTargetYCoordinateMeters() {

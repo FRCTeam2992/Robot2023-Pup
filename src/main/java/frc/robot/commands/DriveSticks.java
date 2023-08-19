@@ -133,8 +133,7 @@ public class DriveSticks extends CommandBase {
         // Lock Rotation to 0 for scoring
 
         // Check for Movement or autoDrieMode
-        if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode()
-                || mDriveTrain.isLoadingMode()) {
+        if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isAutoAlign()) {
 
             // Demo Slow Mode
             // x1 /= 4;
@@ -209,56 +208,8 @@ public class DriveSticks extends CommandBase {
                 gyroTargetRecorded = false;
             }
             // Adjust the rotation to align to score
-            if (mDriveTrain.isScoringMode()) {
-                x2 = mDriveTrain.getGyroYaw();
-                if (x2 > 180) {
-                    x2 -= 360;
-                }
-                if (Math.abs(x2) > Constants.DrivetrainConstants.autoAngleThreshold) {
-                    x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
-                } else {
-                    x2 = 0.0;
-                }
-
-                x2 = Math.min(x2, .60);
-                x2 = Math.max(x2, -.60);
-
-                gyroTargetRecorded = false;
-
-                // If inside the right X odometry range try to adjust left/right joystick to aim
-
-                double targetY = mRobotState.currentTargetYCoordinateMeters();
-                if ((mDriveTrain.getLatestSwervePose()
-                        .getX() > Constants.ScoringGridConstants.autoAlignmentAreaMinXMeters) &&
-                        (mDriveTrain.getLatestSwervePose()
-                                .getX() < Constants.ScoringGridConstants.autoAlignmentAreaMaxXMeters)
-                        &&
-                        (Math.abs(mDriveTrain.getLatestSwervePose().getY()
-                                - targetY) < Constants.ScoringGridConstants.autoAlignmentMaxYErrorMeters)) {
-                    // We are inside the "close enough" range where we can try to autosteer
-                    x1 = scoreYController.calculate(mDriveTrain.getLatestSwervePose().getY(), targetY);
-
-                    // Scale it to our max teleop drive speed
-                    x1 /= Constants.DrivetrainConstants.swerveMaxSpeed;
-                    // x1 = Math.min(x1, 0.6);
-                    // x1 = Math.max(x1, -0.6);
-                } else {
-                    // We are too far away so need to reset the profiled PID controller
-                    scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
-                            x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
-
-                }
-            } else {
-                // We are out of auto score align mode, but keep pid current
-                scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
-                        x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
-            }
-
-            if (mDriveTrain.isLoadingMode()) {
-                double rotationTarget = 90.0;
-                if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-                    rotationTarget *= -1.0;
-                }
+            if (mDriveTrain.isAutoAlign()) {
+                double rotationTarget = mDriveTrain.autoAlignmentMode().direction;
                 x2 = mDriveTrain.getGyroYaw() - rotationTarget;
                 if (x2 > 180) {
                     x2 -= 360;
@@ -267,8 +218,8 @@ public class DriveSticks extends CommandBase {
                 }
                 x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
-                x2 = Math.min(x2, .40);
-                x2 = Math.max(x2, -.40);
+                x2 = Math.min(x2, .55);
+                x2 = Math.max(x2, -.55);
 
                 gyroTargetRecorded = false;
             }

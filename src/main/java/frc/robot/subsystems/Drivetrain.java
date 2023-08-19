@@ -146,11 +146,24 @@ public class Drivetrain extends SubsystemBase {
     public PathPlannerTrajectory curvePath;
     public PathPlannerTrajectory testPath;
 
+    public enum AutoAlignmentMode {
+        OFF(0.0),
+        SCORE_FRONT(180.0),
+        SCORE_BACK(0.0),
+        LOAD_BLUE(-90.0),
+        LOAD_RED(90.0);
+
+        public double direction;
+
+        private AutoAlignmentMode(double direction) {
+            this.direction = direction;
+        }
+    }
+
     // State Variables
     private boolean inSlowMode = false;
     private boolean doFieldOreint = true;
-    private boolean scoringMode = false;
-    private boolean loadingMode = false;
+    private AutoAlignmentMode autoAlignMode = AutoAlignmentMode.OFF;
 
     private int dashboardCounter = 0;
 
@@ -613,20 +626,26 @@ public class Drivetrain extends SubsystemBase {
         this.doFieldOreint = disableFieldOreint;
     }
 
-    public boolean isScoringMode() {
-        return scoringMode;
+    public AutoAlignmentMode autoAlignmentMode() {
+        return autoAlignMode;
     }
 
-    public void setScoringMode(boolean scoringMode) {
-        this.scoringMode = scoringMode;
+    public boolean isAutoAlign() {
+        return autoAlignMode != AutoAlignmentMode.OFF;
     }
 
-    public boolean isLoadingMode() {
-        return loadingMode;
+    public boolean isLoading() {
+        return (autoAlignMode == AutoAlignmentMode.LOAD_BLUE
+            || autoAlignMode == AutoAlignmentMode.LOAD_RED);
     }
 
-    public void setLoadingMode(boolean loadingMode) {
-        this.loadingMode = loadingMode;
+    public boolean isScoring() {
+        return (autoAlignMode == AutoAlignmentMode.SCORE_BACK
+            || autoAlignMode == AutoAlignmentMode.SCORE_FRONT);
+    }
+
+    public void setAutoAlignmentMode(AutoAlignmentMode mode) {
+        this.autoAlignMode = mode;
     }
 
     public void onDisable() {
