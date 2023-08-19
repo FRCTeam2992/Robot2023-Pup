@@ -60,6 +60,7 @@ public final class Constants {
         public static final boolean isVelocityControlled = true;
         public static final boolean isGyroCorrected = true;
         public static final double joystickDeadband = 0.15;
+        public static final double slewRateLimitValue = 1.25;
         public static double joystickXYSmoothFactor = 0.5;
         public static double joystickRotationSmoothFactor = 0.5;
         public static double joystickRotationInverseDeadband = 0.14;
@@ -81,7 +82,7 @@ public final class Constants {
         public static final double frontRightOffset = -145.2; // 95.0 //90.8
         public static final double rearLeftOffset = 102.1; // 180.6 //170.6
         public static final double rearRightOffset = -90.4; // 28.3 //31.0
-
+        
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
             public static final double driveP = 0.05;// .05
