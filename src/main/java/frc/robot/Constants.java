@@ -282,12 +282,12 @@ public final class Constants {
         public static class Intake {
             public static class Speed {
                 public static double cube = 0.8;
-                public static double cone = 0.8;
+                public static double cone = 0.5;
             }
 
             public static class DelayCyclesAfterBeamBreak {
                 public static int cube = 3;
-                public static int cone = 24;
+                public static int cone = 12;
             }
         }
 
