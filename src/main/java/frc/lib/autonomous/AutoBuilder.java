@@ -152,7 +152,7 @@ public class AutoBuilder {
     }
 
     private Command setupAutoPathFollowCommand(boolean isFirstPath) {
-        Command followCommand = new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()).withTimeout(0.5);
+        Command followCommand = new InstantCommand();
         isFirstPath = true;
         switch (getAutoSequence()) {
             case Do_Nothing:
@@ -194,57 +194,61 @@ public class AutoBuilder {
                         isFirstPath = false; // Make sure it's false for subsequent paths
                     }
                 }
-                // FIXME: Not doing high cone score, probably need to change path endpoints
                 followCommand = followCommand
                         .andThen(new InstantCommand(() -> {
                             mDrivetrain.stopDrive();
-                            mRobotState.currentOuttakeType = OuttakeType.Assumed_Cube;
+                            mRobotState.currentOuttakeType = OuttakeType.Front_Low_Cube;
                         }))
                         .andThen(new WaitCommand(1.0))
                         .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(1.0))
                         .andThen(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
                 break;
             case Side3Scores:
-                followCommand = new InstantCommand();
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationMidCube) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStation3ScoresPart1.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                    followCommand = followCommand.andThen(new InstantCommand(() -> mDrivetrain.stopDrive()))
-                            .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rev_Mid_Throw_Cube.speed).withTimeout(0.8));
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStation3ScoresPart2.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallMidCube) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.Wall3ScoresPart1.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                    followCommand = followCommand.andThen(new InstantCommand(() -> {
-                        mDrivetrain.stopDrive();
-                        mRobotState.currentOuttakeType = OuttakeType.Rear_Low_Cube;
-                    }))
-                            .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rear_Low_Cube.speed).withTimeout(0.4));
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.Wall3ScoresPart2.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                    }
-                }
+                // followCommand = new InstantCommand();
+                // if (getAutoStartPosition() == AutoStartPosition.LoadStationMidCube) {
+                // for (PathPlannerTrajectory path :
+                // AutonomousTrajectory.LoadStation3ScoresPart1.trajectoryGroup) {
+                // followCommand = followCommand.andThen(new FollowPathWithEvents(
+                // new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                // path.getMarkers(),
+                // eventMap));
+                // isFirstPath = false; // Make sure it's false for subsequent paths
+                // }
+                // followCommand = followCommand.andThen(new WaitCommand(1.0))
+                // .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(1.0))
+                // .andThen(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+                // followCommand = followCommand.andThen(new FollowPathWithEvents(
+                // new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                // path.getMarkers(),
+                // eventMap));
+                // }
+                // } else if (getAutoStartPosition() == AutoStartPosition.WallMidCube) {
+                // for (PathPlannerTrajectory path :
+                // AutonomousTrajectory.Wall3ScoresPart1.trajectoryGroup) {
+                // followCommand = followCommand.andThen(new FollowPathWithEvents(
+                // new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                // path.getMarkers(),
+                // eventMap));
+                // isFirstPath = false; // Make sure it's false for subsequent paths
+                // }
+                // followCommand = followCommand.andThen(new InstantCommand(() -> {
+                // mDrivetrain.stopDrive();
+                // mRobotState.currentOuttakeType = OuttakeType.Rear_Low_Cube;
+                // }))
+                // .andThen(new MoveClaw(mClaw,
+                // Waypoint.OuttakeType.Rear_Low_Cube.speed).withTimeout(0.4));
+                // for (PathPlannerTrajectory path :
+                // AutonomousTrajectory.Wall3ScoresPart2.trajectoryGroup) {
+                // followCommand = followCommand.andThen(new FollowPathWithEvents(
+                // new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                // path.getMarkers(),
+                // eventMap));
+                // }
+                // }
 
-                followCommand = followCommand.andThen(new InstantCommand(() -> mDrivetrain.stopDrive()))
-                        .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rear_Low_Cube.speed));
+                // followCommand = followCommand.andThen(new InstantCommand(() ->
+                // mDrivetrain.stopDrive()))
+                // .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rear_Low_Cube.speed));
                 break;
             case CenterIntakeBalance:
                 followCommand = followCommand.andThen(new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
