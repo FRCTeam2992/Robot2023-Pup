@@ -4,9 +4,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -28,19 +26,17 @@ public class DriveSticks extends CommandBase {
     private double gyroTarget;
     private boolean gyroTargetRecorded;
 
-    private ProfiledPIDController scoreYController;
+    private SlewRateLimiter driveXSlewRateLimiter;
+    private SlewRateLimiter driveYSlewRateLimiter;
 
     public DriveSticks(Drivetrain subsystem, RobotState robotState) {
         // Subsystem Instance
         mDriveTrain = subsystem;
         mRobotState = robotState;
 
-        scoreYController = new ProfiledPIDController(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreP,
-                Constants.DrivetrainConstants.AutoScorePIDConstants.scoreI,
-                Constants.DrivetrainConstants.AutoScorePIDConstants.scoreD,
-                new TrapezoidProfile.Constraints(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreCruise,
-                        Constants.DrivetrainConstants.AutoScorePIDConstants.scoreAccel));
-        scoreYController.setIntegratorRange(-0.2, 0.2);
+        // Add slew rate limiters
+        driveXSlewRateLimiter = new SlewRateLimiter(Constants.DrivetrainConstants.slewRateLimitValue);
+        driveYSlewRateLimiter = new SlewRateLimiter(Constants.DrivetrainConstants.slewRateLimitValue);
 
         // Set the Subsystem Requirement
         addRequirements(mDriveTrain);
@@ -82,6 +78,8 @@ public class DriveSticks extends CommandBase {
         if (Math.abs(xyMagnitude) <= Constants.DrivetrainConstants.joystickDeadband) {
             x1 = 0.0;
             y1 = 0.0;
+            driveXSlewRateLimiter.reset(0.0);
+            driveYSlewRateLimiter.reset(0.0);
         } else {
             // Get the Polar Angle
             double xyAngle = Math.atan2(y1, x1);
@@ -97,6 +95,10 @@ public class DriveSticks extends CommandBase {
             // Convert from Polar to X and Y Coordinates
             x1 = smoothedXYMagnitude * Math.cos(xyAngle);
             y1 = smoothedXYMagnitude * Math.sin(xyAngle);
+
+            // Apply slew rate limit
+            x1 = driveXSlewRateLimiter.calculate(x1);
+            y1 = driveYSlewRateLimiter.calculate(y1);
         }
 
         // Check the Rotation Deadband
