@@ -57,15 +57,12 @@ public class AutoBuilder {
         mLEDs = leds;
 
         eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
-        eventMap.put("TowerMoveMidCenter", new ScheduleCommand(new SetArmPosition(
+        eventMap.put("ArmMoveLowFront", new ScheduleCommand(new SetArmPosition(
                 mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())).asProxy());
-        eventMap.put("TowerMoveThrowCube", new ScheduleCommand(new SetArmPosition(
-                mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())).asProxy());
+        eventMap.put("TowerMoveMidFront", new ScheduleCommand(new SetArmPosition(
+                mArm, GridTargetingPosition.MidFront.towerWaypoint.angle())).asProxy());
         eventMap.put("TowerMoveGroundIntake", new ScheduleCommand(new SetArmPosition(
                 mArm, Constants.TowerConstants.cubeGroundIntake.angle())).asProxy());
-        eventMap.put("TowerMoveHiGroundIntake", new ScheduleCommand(new SetArmPosition(
-                mArm, Constants.TowerConstants.cubeWall3GroundIntake.angle())).asProxy());
-
         eventMap.put("TowerMoveStowed", new ScheduleCommand(new SetArmPosition(
                 mArm, Constants.TowerConstants.normal.angle())).asProxy());
         eventMap.put("TowerMoveLoadStation", new ScheduleCommand(new SetArmPosition(
@@ -75,23 +72,15 @@ public class AutoBuilder {
         eventMap.put("StartCubeOuttake", new ClawOuttake(mClaw, mRobotState));
         eventMap.put("StopClaw", new StopClaw(mClaw));
         eventMap.put("EndIntake", new MoveClaw(mClaw, 0.2));
-        eventMap.put("StopLimelight", new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
-        eventMap.put("StartLimelight", new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, true));
-        eventMap.put("StartCubeLaunch", new MoveArmToPoint(mArm, mClaw, mDrivetrain, 1.0, 10.0, 30.0, -5.0));
     }
 
     public void setupAutoSelector() {
         // Setup choosers for start position
         autoStartChooser = new SendableChooser<>();
-        autoStartChooser.addOption(AutoStartPosition.LoadStationEnd.description,
-                AutoStartPosition.LoadStationEnd);
-        autoStartChooser.addOption(AutoStartPosition.LoadStationCube.description, AutoStartPosition.LoadStationCube);
-        autoStartChooser.addOption(AutoStartPosition.WallCube.description, AutoStartPosition.WallCube);
-        autoStartChooser.addOption(AutoStartPosition.CenterLoadStationSide.description,
-                AutoStartPosition.CenterLoadStationSide);
-        autoStartChooser.addOption(AutoStartPosition.CenterWallSide.description, AutoStartPosition.CenterWallSide);
-        autoStartChooser.setDefaultOption(AutoStartPosition.WallEnd.description,
-                AutoStartPosition.WallEnd);
+        autoStartChooser.addOption(AutoStartPosition.LoadStationMidCube.description,
+                AutoStartPosition.LoadStationMidCube);
+        autoStartChooser.addOption(AutoStartPosition.WallMidCube.description, AutoStartPosition.WallMidCube);
+        autoStartChooser.addOption(AutoStartPosition.CenterMidCube.description, AutoStartPosition.CenterMidCube);
 
         SmartDashboard.putData("Auto Start Position", autoStartChooser);
 
@@ -100,9 +89,8 @@ public class AutoBuilder {
         autoPreloadScoreChooser.addOption(AutoPreloadScore.No_Preload.description, AutoPreloadScore.No_Preload);
         // autoPreloadScoreChooser.addOption(AutoPreloadScore.Mid_Cube.description,
         // AutoPreloadScore.Mid_Cube);
-        autoPreloadScoreChooser.addOption(AutoPreloadScore.Mid_Cube_Reversed.description,
-                AutoPreloadScore.Mid_Cube_Reversed);
-        autoPreloadScoreChooser.setDefaultOption(AutoPreloadScore.Hi_Cone.description, AutoPreloadScore.Hi_Cone);
+        autoPreloadScoreChooser.addOption(AutoPreloadScore.Mid_Cube.description,
+                AutoPreloadScore.Mid_Cube);
 
         SmartDashboard.putData("Preload Score?", autoPreloadScoreChooser);
 
@@ -111,15 +99,9 @@ public class AutoBuilder {
         autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
         autoSequenceChooser.addOption(AutoSequence.SideMobilityOnly.description,
                 AutoSequence.SideMobilityOnly);
-        autoSequenceChooser.addOption(AutoSequence.SideMobilityBalance.description,
-                AutoSequence.SideMobilityBalance);
-        autoSequenceChooser.addOption(AutoSequence.SideIntakeBalance.description,
-                AutoSequence.SideIntakeBalance);
         autoSequenceChooser.addOption(AutoSequence.Side2Scores.description, AutoSequence.Side2Scores);
         autoSequenceChooser.addOption(AutoSequence.Side3Scores.description, AutoSequence.Side3Scores);
-        autoSequenceChooser.addOption(AutoSequence.CenterBalance.description, AutoSequence.CenterBalance);
         autoSequenceChooser.addOption(AutoSequence.CenterIntakeBalance.description, AutoSequence.CenterIntakeBalance);
-        autoSequenceChooser.addOption(AutoSequence.Side2ScoreBalance.description, AutoSequence.Side2ScoreBalance);
 
         SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
 
@@ -163,18 +145,6 @@ public class AutoBuilder {
                                 .raceWith(new MoveClaw(mClaw, 0.5)))
                         .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(0.5));
                 break;
-            case Mid_Cube_Reversed:
-                initialScoreCommand = initialScoreCommand
-                        .andThen(new InstantCommand(() -> {
-                            mRobotState.currentOuttakeType = OuttakeType.Unknown;
-                            mRobotState.intakeMode = IntakeModeState.Cube;
-                        }))
-                        .andThen(new SetArmPosition(mArm, Constants.TowerConstants.rearMidThrowCube.angle()).asProxy()
-                                .withTimeout(0.5)
-                                .raceWith(new MoveClaw(mClaw, 0.5)))
-                        .andThen(new WaitCommand(0.1))
-                        .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(0.4));
-                break;
             case No_Preload:
             default:
         }
@@ -188,7 +158,7 @@ public class AutoBuilder {
             case Do_Nothing:
                 break;
             case SideMobilityOnly:
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                if (getAutoStartPosition() == AutoStartPosition.LoadStationMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStationMobility.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -196,7 +166,7 @@ public class AutoBuilder {
                                 eventMap));
                         isFirstPath = false; // Make sure it's false for subsequent paths
                     }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                } else if (getAutoStartPosition() == AutoStartPosition.WallMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.WallMobility.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -206,28 +176,8 @@ public class AutoBuilder {
                     }
                 }
                 break;
-            case SideIntakeBalance:
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStationIntakeBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.WallIntakeBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                }
-                followCommand = followCommand.andThen(new BalanceRobotPID(mDrivetrain));
-                break;
             case Side2Scores:
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                if (getAutoStartPosition() == AutoStartPosition.LoadStationMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStation2Scores.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -235,7 +185,7 @@ public class AutoBuilder {
                                 eventMap));
                         isFirstPath = false; // Make sure it's false for subsequent paths
                     }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                } else if (getAutoStartPosition() == AutoStartPosition.WallMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.Wall2Scores.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -256,7 +206,7 @@ public class AutoBuilder {
                 break;
             case Side3Scores:
                 followCommand = new InstantCommand();
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationCube) {
+                if (getAutoStartPosition() == AutoStartPosition.LoadStationMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStation3ScoresPart1.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -272,7 +222,7 @@ public class AutoBuilder {
                                 path.getMarkers(),
                                 eventMap));
                     }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallCube) {
+                } else if (getAutoStartPosition() == AutoStartPosition.WallMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.Wall3ScoresPart1.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -296,100 +246,10 @@ public class AutoBuilder {
                 followCommand = followCommand.andThen(new InstantCommand(() -> mDrivetrain.stopDrive()))
                         .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rear_Low_Cube.speed));
                 break;
-            case Side2ScoreBalance:
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStation2ScoreBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.Wall2ScoreBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                }
-                followCommand = followCommand.andThen(new BalanceRobotPID(mDrivetrain));
-                break;
-            case SideMobilityBalance:
-                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.LoadStationMobilityBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.WallMobilityBalance.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                }
-                followCommand = followCommand.andThen(new BalanceRobotPID(mDrivetrain));
-                break;
-            case CenterBalance:
-                followCommand = followCommand.andThen(new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
-                if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.CenterBalanceLoadStationSide.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.CenterBalanceWallSide.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                }
-                followCommand = followCommand.andThen(new BalanceRobotPID(mDrivetrain));
-                break;
             case CenterIntakeBalance:
                 followCommand = followCommand.andThen(new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
-                if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.CenterIntakeBalanceLoadStationSide.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
+                if (getAutoStartPosition() == AutoStartPosition.CenterMidCube) {
                     for (PathPlannerTrajectory path : AutonomousTrajectory.CenterIntakeBalanceWallSide.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                }
-                followCommand = followCommand.andThen(new BalanceRobotPID(mDrivetrain));
-                break;
-            case Center2ScoreBalance:
-                followCommand = followCommand.andThen(new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
-                if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.Center2ScoreBalanceLoadStationSide.trajectoryGroup) {
-                        followCommand = followCommand.andThen(new FollowPathWithEvents(
-                                new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
-                                path.getMarkers(),
-                                eventMap));
-                        isFirstPath = false; // Make sure it's false for subsequent paths
-                    }
-                } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-                    for (PathPlannerTrajectory path : AutonomousTrajectory.Center2ScoreBalanceWallSide.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
                                 path.getMarkers(),

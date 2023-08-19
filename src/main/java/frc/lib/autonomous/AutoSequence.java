@@ -5,36 +5,21 @@ import java.util.List;
 
 public enum AutoSequence {
     Do_Nothing("Do Nothing",
-            AutoStartPosition.LoadStationEnd,
-            AutoStartPosition.CenterLoadStationSide,
-            AutoStartPosition.CenterWallSide,
-            AutoStartPosition.WallEnd),
+            AutoStartPosition.LoadStationMidCube,
+            AutoStartPosition.CenterMidCube,
+            AutoStartPosition.WallMidCube),
     SideMobilityOnly("Side Mobility Only",
-            AutoStartPosition.LoadStationEnd,
-            AutoStartPosition.WallEnd),
-    SideMobilityBalance("Side Mobility + Balance",
-            AutoStartPosition.LoadStationEnd,
-            AutoStartPosition.WallEnd),
-    SideIntakeBalance("Side Intake + Balance",
-            AutoStartPosition.LoadStationEnd,
-            AutoStartPosition.WallEnd),
+            AutoStartPosition.LoadStationMidCube,
+            AutoStartPosition.WallMidCube),
     Side2Scores("Side 2 Scores",
-            AutoStartPosition.LoadStationEnd,
-            AutoStartPosition.WallEnd),
+            AutoStartPosition.LoadStationMidCube,
+            AutoStartPosition.WallMidCube),
     Side3Scores("Side 3 Scores",
-            AutoStartPosition.LoadStationCube,
-            AutoStartPosition.WallCube),
-    CenterBalance("Center Cross + Balance",
-            AutoStartPosition.CenterLoadStationSide,
-            AutoStartPosition.CenterWallSide),
+            AutoStartPosition.LoadStationMidCube,
+            AutoStartPosition.WallMidCube),
     CenterIntakeBalance("Center Intake Balance",
-            AutoStartPosition.CenterLoadStationSide,
-            AutoStartPosition.CenterWallSide),
-    Center2ScoreBalance("Center 2 Score Balance",
-            AutoStartPosition.CenterLoadStationSide,
-            AutoStartPosition.CenterWallSide),
-    Side2ScoreBalance("Side 2 Scores + Balance",
-            AutoStartPosition.LoadStationEnd);
+            AutoStartPosition.CenterMidCube);
+
     public String description;
     public List<AutoStartPosition> allowedStartPositions;
 

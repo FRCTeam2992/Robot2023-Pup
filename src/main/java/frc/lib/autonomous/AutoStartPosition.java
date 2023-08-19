@@ -8,57 +8,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public enum AutoStartPosition {
     // Path planner start poses MUST match these starting pose values!
-    LoadStationEnd("Load Station End",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid3CenterYMeters
-                            - ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid6CenterYMeters
-                            + ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0))),
-    LoadStationCube("Load Station Cube",
+    LoadStationMidCube("Load Station MidCube",
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Red.grid3CenterYMeters,
                     Rotation2d.fromDegrees(180.0)),
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Blue.grid6CenterYMeters,
                     Rotation2d.fromDegrees(180.0))),
-    WallCube("WallCube",
+    WallMidCube("Wall MidCube",
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Red.grid1CenterYMeters,
                     Rotation2d.fromDegrees(180.0)),
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Blue.grid8CenterYMeters,
                     Rotation2d.fromDegrees(180.0))),
-
-    CenterLoadStationSide("Center Load Station Side",
+    CenterMidCube("Center MidCube",
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid2CenterYMeters
-                            - ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0)),
+                    ScoringGridConstants.Red.grid2CenterYMeters,
+                    Rotation2d.fromDegrees(180.0)),
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid7CenterYMeters
-                            + ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0))),
-    WallEnd("Wall End",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid1CenterYMeters
-                            + ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid8CenterYMeters
-                            - ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0))),
-    CenterWallSide("Center Wall Side",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid2CenterYMeters
-                            + ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid7CenterYMeters
-                            - ScoringGridConstants.conePoleOffsetYMeters,
-                    Rotation2d.fromDegrees(0.0)));
+                    ScoringGridConstants.Blue.grid7CenterYMeters,
+                    Rotation2d.fromDegrees(180.0)));
 
     public String description;
     public Pose2d startPoseRed;
