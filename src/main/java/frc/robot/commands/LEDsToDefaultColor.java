@@ -29,10 +29,10 @@ public class LEDsToDefaultColor extends CommandBase {
     } else {
       switch (mRobotState.intakeMode) {
         case Cube:
-          mLEDs.setLEDStripColor(Constants.LEDColors.purple);
+          mLEDs.displayCube();
           break;
         case Cone:
-          mLEDs.setLEDStripColor(Constants.LEDColors.yellow);
+          mLEDs.displayCone();
           break;
         case Unknown:
           mLEDs.setLEDStripColor(Constants.LEDColors.blue);
