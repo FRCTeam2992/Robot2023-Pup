@@ -25,7 +25,6 @@ import frc.robot.commands.SetLEDsColor;
 import frc.robot.commands.SetLEDsCone;
 import frc.robot.commands.SetLEDsCube;
 import frc.robot.commands.SetScoringTarget;
-import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoSingleLoadStationIntake;
 import frc.robot.subsystems.Arm;
@@ -179,14 +178,6 @@ public class RobotContainer {
                         () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
 
         // Bumpers/Triggers
-        controller0.leftBumper().onTrue(new InstantCommand(
-                () -> {
-                    mDrivetrain.setDoFieldOreint(false);
-                }));// Disable Field Orient
-        controller0.leftBumper().onFalse(new InstantCommand(
-                () -> {
-                    mDrivetrain.setDoFieldOreint(true);
-                }));// Disable Field Orient
 
         controller0.rightBumper().onTrue(new InstantCommand(
                 () -> {
@@ -206,7 +197,8 @@ public class RobotContainer {
         controller0.rightTrigger(0.6)
                 .onTrue(new ClawOuttake(mClaw, mRobotState));
 
-        controller0.rightStick().onTrue(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+        controller0.rightStick().onTrue(
+            new SetArmPosition(mArm, TowerConstants.normal.angle()));
         controller0.rightStick().onTrue(new HoldClaw(mClaw));
 
         // Back and Start
@@ -306,7 +298,7 @@ public class RobotContainer {
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
                 new MoveArm(mArm, -0.40));
         controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                        new MoveArm(mArm, 0.40));
+                new MoveArm(mArm, 0.40));
     }
 
     private void configureShuffleboardBindings() {
