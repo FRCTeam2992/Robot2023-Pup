@@ -66,17 +66,9 @@ public class IntakeGamePiece extends CommandBase {
     public void end(boolean interrupted) {
         mClaw.setClawSpeed(0.0);
         if (mClaw.getBeamBreakTriggered()) {
-            switch (mRobotState.intakeMode) {
-                case Cube:
-                    CommandScheduler.getInstance().schedule(
-                            new CycleLEDs(mLEDs, Constants.LEDColors.purple, Constants.LEDColors.off).withTimeout(1.5));
-                    break;
-                case Cone:
-                case Unknown:
-                default:
-                    CommandScheduler.getInstance().schedule(
-                            new CycleLEDs(mLEDs, Constants.LEDColors.yellow, Constants.LEDColors.off).withTimeout(1.5));
-            }
+            CommandScheduler.getInstance().schedule(
+                new BlinkLEDs(mLEDs, mRobotState.intakeMode)
+            );
         }
     }
 
