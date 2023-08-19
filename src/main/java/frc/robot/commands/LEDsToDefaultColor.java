@@ -7,11 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
+import frc.robot.RobotState.IntakeModeState;
 import frc.robot.subsystems.LEDs;
 
 public class LEDsToDefaultColor extends CommandBase {
   private LEDs mLEDs;
   private RobotState mRobotState;
+  private IntakeModeState priorIntakeMode;
   
   /** Creates a new LEDsToDefaultColor. */
   public LEDsToDefaultColor(LEDs leds, RobotState robotState) {
@@ -24,6 +26,7 @@ public class LEDsToDefaultColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    priorIntakeMode = mRobotState.intakeMode;
     if (mRobotState.isInEndgameMode()) {
       mLEDs.setLEDStripColor(Constants.LEDColors.white);
     } else {
@@ -42,7 +45,21 @@ public class LEDsToDefaultColor extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (mRobotState.intakeMode != priorIntakeMode) {
+      switch (mRobotState.intakeMode) {
+        case Cube:
+          mLEDs.displayCube();
+          break;
+        case Cone:
+          mLEDs.displayCone();
+          break;
+        case Unknown:
+          mLEDs.setLEDStripColor(Constants.LEDColors.blue);
+      }
+      priorIntakeMode = mRobotState.intakeMode;
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

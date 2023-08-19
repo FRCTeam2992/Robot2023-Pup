@@ -66,18 +66,9 @@ public class IntakeGamePiece extends CommandBase {
     public void end(boolean interrupted) {
         mClaw.setClawSpeed(0.0);
         if (mClaw.getBeamBreakTriggered()) {
-            CommandBase cmd =  new BlinkLEDs(mLEDs, mRobotState.intakeMode).withTimeout(1.0);
-
-            switch (mRobotState.intakeMode) {
-                case Cone:
-                    cmd = cmd.andThen(new SetLEDsCone(mLEDs));
-                    break;
-                case Cube:
-                case Unknown:
-                default:
-                    cmd = cmd.andThen(new SetLEDsCube(mLEDs));
-            }
-            CommandScheduler.getInstance().schedule(cmd);
+            CommandScheduler.getInstance().schedule(
+                new BlinkLEDs(mLEDs, mRobotState.intakeMode).withTimeout(1.0)
+            );
         }
     }
 
