@@ -14,6 +14,8 @@ public class LEDsToDefaultColor extends CommandBase {
   private LEDs mLEDs;
   private RobotState mRobotState;
   private IntakeModeState priorIntakeMode;
+  private int cycleCountSinceLastUpdate;
+  private final int SLOW_LOOP_CYCLES = 25;
   
   /** Creates a new LEDsToDefaultColor. */
   public LEDsToDefaultColor(LEDs leds, RobotState robotState) {
@@ -26,6 +28,7 @@ public class LEDsToDefaultColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    cycleCountSinceLastUpdate = 0;
     priorIntakeMode = mRobotState.intakeMode;
     if (mRobotState.isInEndgameMode()) {
       mLEDs.setLEDStripColor(Constants.LEDColors.white);
@@ -46,7 +49,7 @@ public class LEDsToDefaultColor extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mRobotState.intakeMode != priorIntakeMode) {
+    if (intakeModeChanged() || slowLoopCyclesExpired()) {
       switch (mRobotState.intakeMode) {
         case Cube:
           mLEDs.displayCube();
@@ -58,7 +61,17 @@ public class LEDsToDefaultColor extends CommandBase {
           mLEDs.setLEDStripColor(Constants.LEDColors.blue);
       }
       priorIntakeMode = mRobotState.intakeMode;
+      cycleCountSinceLastUpdate = 0;
+    } else {
+      cycleCountSinceLastUpdate++;
     }
+  }
+
+  private boolean intakeModeChanged() {
+    return mRobotState.intakeMode != priorIntakeMode;
+  }
+  private boolean slowLoopCyclesExpired() {
+    return cycleCountSinceLastUpdate >= SLOW_LOOP_CYCLES;
   }
 
   // Called once the command ends or is interrupted.
