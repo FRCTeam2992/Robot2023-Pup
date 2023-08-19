@@ -41,13 +41,13 @@ public class IntakeGamePiece extends CommandBase {
     @Override
     public void execute() {
         switch (mRobotState.intakeMode) {
-            case Cube:
-                speed = ClawConstants.Intake.Speed.cube;
-                break;
             case Cone:
+                speed = ClawConstants.Intake.Speed.cone;
+                break;
+            case Cube:
             case Unknown:
             default:
-                speed = ClawConstants.Intake.Speed.cone;
+                speed = ClawConstants.Intake.Speed.cube;
         }
         mClaw.setClawSpeed(speed);
         if (mClaw.getBeamBreakTriggered()) {
@@ -66,9 +66,18 @@ public class IntakeGamePiece extends CommandBase {
     public void end(boolean interrupted) {
         mClaw.setClawSpeed(0.0);
         if (mClaw.getBeamBreakTriggered()) {
-            CommandScheduler.getInstance().schedule(
-                new BlinkLEDs(mLEDs, mRobotState.intakeMode)
-            );
+            CommandBase cmd =  new BlinkLEDs(mLEDs, mRobotState.intakeMode).withTimeout(1.0);
+
+            switch (mRobotState.intakeMode) {
+                case Cone:
+                    cmd = cmd.andThen(new SetLEDsCone(mLEDs));
+                    break;
+                case Cube:
+                case Unknown:
+                default:
+                    cmd = cmd.andThen(new SetLEDsCube(mLEDs));
+            }
+            CommandScheduler.getInstance().schedule(cmd);
         }
     }
 
