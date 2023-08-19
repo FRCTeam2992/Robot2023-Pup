@@ -218,8 +218,8 @@ public class DriveSticks extends CommandBase {
                 }
                 x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
-                x2 = Math.min(x2, .40);
-                x2 = Math.max(x2, -.40);
+                x2 = Math.min(x2, .55);
+                x2 = Math.max(x2, -.55);
 
                 gyroTargetRecorded = false;
             }
