@@ -8,21 +8,17 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotState;
-import frc.robot.subsystems.Arm;
+
 
 public class SetScoringTarget extends CommandBase {
-
-  private Arm mArm;
   private RobotState mRobotState;
 
   private BooleanSupplier isLowScore;
   private BooleanSupplier isBackScore;
 
   /** Creates a new SetScoringTargetXBox. */
-  public SetScoringTarget(Arm arm, RobotState robotState, BooleanSupplier lowScoreSupplier,
+  public SetScoringTarget(RobotState robotState, BooleanSupplier lowScoreSupplier,
       BooleanSupplier backScoreSupplier) {
-
-    mArm = arm;
     mRobotState = robotState;
 
     isLowScore = lowScoreSupplier;
