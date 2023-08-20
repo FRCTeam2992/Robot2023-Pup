@@ -6,8 +6,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 public enum AutonomousTrajectory {
-    LoadStationMobility(PathPlanner.loadPathGroup("LoadStationMobility", new PathConstraints(.5, .5))),
-    WallMobility(PathPlanner.loadPathGroup("WallMobility", new PathConstraints(.5, .5))),
+    LoadStationMobility(PathPlanner.loadPathGroup("LoadStationMobility", new PathConstraints(1.5, 2.5))),
+    WallMobility(PathPlanner.loadPathGroup("WallMobility", new PathConstraints(1.5, 2.5))),
     LoadStation2Scores(PathPlanner.loadPathGroup("LoadStation2Scores", 4.0, 1.8)),
     Wall3ScoresPart1(PathPlanner.loadPathGroup("Wall3Scores-Part1",
             new PathConstraints(4.5, 2.95),
@@ -21,10 +21,10 @@ public enum AutonomousTrajectory {
             new PathConstraints(4.5, 2.95))),
     Wall2Scores(PathPlanner.loadPathGroup("Wall2Scores", 1.9, 3.0)),
     CenterIntakeBalanceWallSide(PathPlanner.loadPathGroup("CenterIntakeBalanceWallSide",
-            new PathConstraints(3.0, 2.5),
-            new PathConstraints(1.5, 2.5),
-            new PathConstraints(1.3, 1.0),
-            new PathConstraints(3.0, 2.5)));
+            new PathConstraints(1.6, 1.5),
+            new PathConstraints(2.5, 2.5),
+            new PathConstraints(2.0, 1.5),
+            new PathConstraints(2.0, 1.5)));
 
     public List<PathPlannerTrajectory> trajectoryGroup;
 

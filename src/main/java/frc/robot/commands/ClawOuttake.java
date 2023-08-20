@@ -18,7 +18,7 @@ public class ClawOuttake extends CommandBase {
     private boolean timerStarted;
     private int cyclesBeforeOut;
 
-    public static final int IN_CYCLES_BEFORE_OUT = 13;
+    public static final int IN_CYCLES_BEFORE_OUT = 7;
     public static final int OUT_CYCLES = 50;
 
     /** Creates a new TestClawOuttake. */
@@ -60,7 +60,7 @@ public class ClawOuttake extends CommandBase {
         } else {
             switch(mRobotState.currentOuttakeType) {
                 case Mid_Cube:
-                    mClaw.setClawSpeed(RobotState.IntakeModeState.Cube.clawSpeed);
+                    mClaw.setClawSpeed(RobotState.IntakeModeState.Cube.clawSpeed / 4.0);
                     cyclesBeforeOut++;
                     if (cyclesBeforeOut >= IN_CYCLES_BEFORE_OUT) {
                         timerStarted = true;

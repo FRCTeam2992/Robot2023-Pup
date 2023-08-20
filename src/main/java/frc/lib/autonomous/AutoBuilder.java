@@ -68,10 +68,10 @@ public class AutoBuilder {
         eventMap.put("TowerMoveLoadStation", new ScheduleCommand(new SetArmPosition(
                 mArm, Constants.TowerConstants.singleLoadStation.angle())).asProxy());
 
-        eventMap.put("StartCubeIntake", new IntakeGamePiece(mClaw, mLEDs, mRobotState));
-        eventMap.put("StartCubeOuttake", new ClawOuttake(mClaw, mRobotState));
-        eventMap.put("StopClaw", new StopClaw(mClaw));
-        eventMap.put("EndIntake", new MoveClaw(mClaw, 0.2));
+        eventMap.put("StartCubeIntake", new IntakeGamePiece(mClaw, mLEDs, mRobotState).asProxy());
+        eventMap.put("StartCubeOuttake", new ClawOuttake(mClaw, mRobotState).asProxy());
+        eventMap.put("StopClaw", new StopClaw(mClaw).asProxy());
+        eventMap.put("EndIntake", new MoveClaw(mClaw, 0.2).asProxy());
     }
 
     public void setupAutoSelector() {
@@ -80,13 +80,13 @@ public class AutoBuilder {
         autoStartChooser.addOption(AutoStartPosition.LoadStationMidCube.description,
                 AutoStartPosition.LoadStationMidCube);
         autoStartChooser.addOption(AutoStartPosition.WallMidCube.description, AutoStartPosition.WallMidCube);
-        autoStartChooser.addOption(AutoStartPosition.CenterMidCube.description, AutoStartPosition.CenterMidCube);
+        autoStartChooser.setDefaultOption(AutoStartPosition.CenterMidCube.description, AutoStartPosition.CenterMidCube);
 
         SmartDashboard.putData("Auto Start Position", autoStartChooser);
 
         // Setup chooser for preload scoring
         autoPreloadScoreChooser = new SendableChooser<>();
-        autoPreloadScoreChooser.addOption(AutoPreloadScore.No_Preload.description, AutoPreloadScore.No_Preload);
+        autoPreloadScoreChooser.setDefaultOption(AutoPreloadScore.No_Preload.description, AutoPreloadScore.No_Preload);
         // autoPreloadScoreChooser.addOption(AutoPreloadScore.Mid_Cube.description,
         // AutoPreloadScore.Mid_Cube);
         autoPreloadScoreChooser.addOption(AutoPreloadScore.Mid_Cube.description,
@@ -132,6 +132,7 @@ public class AutoBuilder {
         if (startingPose == null) {
             return new InstantCommand();
         }
+
         initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
         switch (getAutoPreloadScore()) {
             case Mid_Cube:
@@ -140,10 +141,10 @@ public class AutoBuilder {
                             mRobotState.currentOuttakeType = OuttakeType.Mid_Cube;
                             mRobotState.intakeMode = IntakeModeState.Cube;
                         }))
-                        .andThen(new SetArmPosition(mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())
-                                .withTimeout(0.3)
-                                .raceWith(new MoveClaw(mClaw, 0.5)))
-                        .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(0.5));
+                        .andThen(
+                                new SetArmPosition(mArm, GridTargetingPosition.MidFront.towerWaypoint.angle()).asProxy()
+                                        .raceWith(new MoveClaw(mClaw, 0.2).asProxy()))
+                        .andThen(new ClawOuttake(mClaw, mRobotState).asProxy().withTimeout(0.5));
                 break;
             case No_Preload:
             default:
@@ -251,8 +252,11 @@ public class AutoBuilder {
                 // .andThen(new MoveClaw(mClaw, Waypoint.OuttakeType.Rear_Low_Cube.speed));
                 break;
             case CenterIntakeBalance:
-                followCommand = followCommand.andThen(new SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
+                // followCommand = followCommand.andThen(new
+                // SetLimeLightOdometryUpdates(mRobotState, mDrivetrain, false));
+                System.out.println("Selected center balance path");
                 if (getAutoStartPosition() == AutoStartPosition.CenterMidCube) {
+                    System.out.println("Running center balance path");
                     for (PathPlannerTrajectory path : AutonomousTrajectory.CenterIntakeBalanceWallSide.trajectoryGroup) {
                         followCommand = followCommand.andThen(new FollowPathWithEvents(
                                 new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
@@ -283,24 +287,15 @@ public class AutoBuilder {
         } else {
             // Starting position is compatible, so setup the path following command,
             // then build a parallel group to move from scoring position while driving
-            if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
-                autoPathCommand = setupAutoPathFollowCommand(false);
-                afterInitialScoreCommand = autoPathCommand;
-            } else {
-                // In the case of No_Preload, we didn't score, so no arm/elevator/claw
-                // reset is needed, and we can just follow the path directly.
-                // The path will be our first path, since no initial path is needed if
-                // we don't score a preload.
-                autoPathCommand = setupAutoPathFollowCommand(true);
-                afterInitialScoreCommand = autoPathCommand;
-            }
-
-            // If we've completed the above, we should always have a Command object for
-            // both initialScoreCommand and afterInitialScoreCommand (either or both of
-            // which may be just a dummy InstantCommand that does nothing), so we can now
-            // return a sequence of those Commands.
-            return initialScoreCommand.andThen(afterInitialScoreCommand);
+            autoPathCommand = setupAutoPathFollowCommand(true);
+            afterInitialScoreCommand = autoPathCommand;
         }
+
+        // If we've completed the above, we should always have a Command object for
+        // both initialScoreCommand and afterInitialScoreCommand (either or both of
+        // which may be just a dummy InstantCommand that does nothing), so we can now
+        // return a sequence of those Commands.
+        return initialScoreCommand.andThen(afterInitialScoreCommand);
     }
 
 }
