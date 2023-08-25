@@ -14,9 +14,9 @@ public enum AutoSequence {
     Side2Scores("Side 2 Scores",
             AutoStartPosition.LoadStationMidCube,
             AutoStartPosition.WallMidCube),
-    Side3Scores("Side 3 Scores",
-            AutoStartPosition.LoadStationMidCube,
-            AutoStartPosition.WallMidCube),
+    Side3Scores("Side 3 Scores"),
+        //     AutoStartPosition.LoadStationMidCube,
+        //     AutoStartPosition.WallMidCube),
     CenterIntakeBalance("Center Intake Balance",
             AutoStartPosition.CenterMidCube);
 
