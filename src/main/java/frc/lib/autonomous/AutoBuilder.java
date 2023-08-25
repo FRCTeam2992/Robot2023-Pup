@@ -56,18 +56,24 @@ public class AutoBuilder {
         mClaw = claw;
         mLEDs = leds;
 
-        eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
-        eventMap.put("ArmMoveLowFront", new ScheduleCommand(new SetArmPosition(
-                mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())).asProxy());
-        eventMap.put("TowerMoveMidFront", new ScheduleCommand(new SetArmPosition(
-                mArm, GridTargetingPosition.MidFront.towerWaypoint.angle())).asProxy());
-        eventMap.put("TowerMoveGroundIntake", new ScheduleCommand(new SetArmPosition(
-                mArm, Constants.TowerConstants.cubeGroundIntake.angle())).asProxy());
-        eventMap.put("TowerMoveStowed", new ScheduleCommand(new SetArmPosition(
-                mArm, Constants.TowerConstants.normal.angle())).asProxy());
-        eventMap.put("TowerMoveLoadStation", new ScheduleCommand(new SetArmPosition(
-                mArm, Constants.TowerConstants.singleLoadStation.angle())).asProxy());
-
+        eventMap.put("SetIntakeModeCube", new InstantCommand(
+            () -> mRobotState.intakeMode = IntakeModeState.Cube
+        ));
+        eventMap.put("ArmMoveLowFront", new ScheduleCommand(
+            new SetArmPosition(mArm, GridTargetingPosition.LowFront.towerWaypoint.angle())
+        ).asProxy());
+        eventMap.put("TowerMoveMidFront", new ScheduleCommand(
+            new SetArmPosition(mArm, GridTargetingPosition.MidFront.towerWaypoint.angle())
+        ).asProxy());
+        eventMap.put("TowerMoveGroundIntake", new ScheduleCommand(
+            new SetArmPosition(mArm, Constants.TowerConstants.cubeGroundIntake.angle())
+        ).asProxy());
+        eventMap.put("TowerMoveStowed", new ScheduleCommand(
+            new SetArmPosition(mArm, Constants.TowerConstants.normal.angle())
+        ).asProxy());
+        eventMap.put("TowerMoveLoadStation", new ScheduleCommand(
+            new SetArmPosition(mArm, Constants.TowerConstants.singleLoadStation.angle())
+        ).asProxy());
         eventMap.put("StartCubeIntake", new IntakeGamePiece(mClaw, mLEDs, mRobotState).asProxy());
         eventMap.put("StartCubeOuttake", new ClawOuttake(mClaw, mRobotState).asProxy());
         eventMap.put("StopClaw", new StopClaw(mClaw).asProxy());
@@ -200,9 +206,10 @@ public class AutoBuilder {
                             mDrivetrain.stopDrive();
                             mRobotState.currentOuttakeType = OuttakeType.Front_Low_Cube;
                         }))
-                        .andThen(new WaitCommand(1.0))
-                        .andThen(new ClawOuttake(mClaw, mRobotState).withTimeout(1.0))
-                        .andThen(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()));
+                        .andThen(new WaitCommand(0.1))
+                        .andThen(new SetArmPosition(mArm, Constants.TowerConstants.frontCubeLow.angle()).asProxy())
+                        .andThen(new ClawOuttake(mClaw, mRobotState).asProxy().withTimeout(1.0))
+                        .andThen(new SetArmPosition(mArm, Constants.TowerConstants.normal.angle()).asProxy());
                 break;
             case Side3Scores:
                 // followCommand = new InstantCommand();

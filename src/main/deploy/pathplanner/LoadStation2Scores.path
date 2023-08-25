@@ -50,15 +50,15 @@
     {
       "anchorPoint": {
         "x": 5.870253356997706,
-        "y": 4.71
+        "y": 4.5
       },
       "prevControl": {
         "x": 5.238656013389072,
-        "y": 4.71
+        "y": 4.5
       },
       "nextControl": {
         "x": 6.558676487451068,
-        "y": 4.71
+        "y": 4.5
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -75,15 +75,15 @@
     {
       "anchorPoint": {
         "x": 7.0006769049071105,
-        "y": 4.712093647537549
+        "y": 4.5
       },
       "prevControl": {
         "x": 6.369464403567081,
-        "y": 4.712093647537549
+        "y": 4.5
       },
       "nextControl": {
         "x": 6.369464403567081,
-        "y": 4.712093647537549
+        "y": 4.5
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -124,11 +124,11 @@
     },
     {
       "anchorPoint": {
-        "x": 1.85,
+        "x": 1.92,
         "y": 4.979
       },
       "prevControl": {
-        "x": 2.603544820940918,
+        "x": 2.673544820940918,
         "y": 4.936158547784402
       },
       "nextControl": null,
@@ -153,8 +153,7 @@
       "position": 0.1,
       "names": [
         "SetIntakeModeCube",
-        "TowerMoveGroundIntake",
-        "StopLimelight"
+        "TowerMoveGroundIntake"
       ]
     },
     {
@@ -171,9 +170,9 @@
       ]
     },
     {
-      "position": 4.6,
+      "position": 4.259740259740252,
       "names": [
-        "TowerMoveMidCenter"
+        "TowerMoveLowFront"
       ]
     }
   ]

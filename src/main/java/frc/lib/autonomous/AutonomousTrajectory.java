@@ -8,7 +8,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 public enum AutonomousTrajectory {
     LoadStationMobility(PathPlanner.loadPathGroup("LoadStationMobility", new PathConstraints(1.5, 2.5))),
     WallMobility(PathPlanner.loadPathGroup("WallMobility", new PathConstraints(1.5, 2.5))),
-    LoadStation2Scores(PathPlanner.loadPathGroup("LoadStation2Scores", 4.0, 1.8)),
+    LoadStation2Scores(PathPlanner.loadPathGroup("LoadStation2Scores", 2.0, 1.5)),
     Wall3ScoresPart1(PathPlanner.loadPathGroup("Wall3Scores-Part1",
             new PathConstraints(4.5, 2.95),
             new PathConstraints(3.0, 2.25),
