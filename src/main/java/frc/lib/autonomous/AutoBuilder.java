@@ -134,28 +134,29 @@ public class AutoBuilder {
 
     private Command setupAutoInitialScoreCommand() {
         Command initialScoreCommand;
-        Pose2d startingPose = getAutoStartPosition().getStartPose();
-        if (startingPose == null) {
+        
+        if (getAutoStartPosition() == null || getAutoStartPosition().getStartPose() == null) {
             return new InstantCommand();
+        } else {
+            Pose2d startingPose = getAutoStartPosition().getStartPose();
+            initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
+            switch (getAutoPreloadScore()) {
+                case Mid_Cube:
+                    initialScoreCommand = initialScoreCommand
+                            .andThen(new InstantCommand(() -> {
+                                mRobotState.currentOuttakeType = OuttakeType.Mid_Cube;
+                                mRobotState.intakeMode = IntakeModeState.Cube;
+                            }))
+                            .andThen(
+                                    new SetArmPosition(mArm, GridTargetingPosition.MidFront.towerWaypoint.angle()).asProxy()
+                                            .raceWith(new MoveClaw(mClaw, 0.2).asProxy()))
+                            .andThen(new ClawOuttake(mClaw, mRobotState).asProxy().withTimeout(0.5));
+                    break;
+                case No_Preload:
+                default:
+            }
+            return initialScoreCommand;
         }
-
-        initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
-        switch (getAutoPreloadScore()) {
-            case Mid_Cube:
-                initialScoreCommand = initialScoreCommand
-                        .andThen(new InstantCommand(() -> {
-                            mRobotState.currentOuttakeType = OuttakeType.Mid_Cube;
-                            mRobotState.intakeMode = IntakeModeState.Cube;
-                        }))
-                        .andThen(
-                                new SetArmPosition(mArm, GridTargetingPosition.MidFront.towerWaypoint.angle()).asProxy()
-                                        .raceWith(new MoveClaw(mClaw, 0.2).asProxy()))
-                        .andThen(new ClawOuttake(mClaw, mRobotState).asProxy().withTimeout(0.5));
-                break;
-            case No_Preload:
-            default:
-        }
-        return initialScoreCommand;
     }
 
     private Command setupAutoPathFollowCommand(boolean isFirstPath) {
